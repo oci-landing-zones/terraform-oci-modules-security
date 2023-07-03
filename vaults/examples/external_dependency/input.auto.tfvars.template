@@ -1,0 +1,65 @@
+# Copyright (c) 2023 Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
+#-------------------------------------------------------------------------------------------------------------------------------------------
+# 1. Rename this file to <project-name>.auto.tfvars, where <project-name> is a name of your choice.
+# 2. Provide values for "Tenancy Connectivity Variables".
+# 3. Replace <REPLACE-BY-COMPARTMENT-REFERENCE> placeholder by the appropriate compartment reference, expected to be found in the 
+#    OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME> within the object pointed by oci_compartments_dependency.
+# 4. Replace <REPLACE-BY-VAULT-MANAGEMENT-ENDPOINT-REFERENCE> by the appropriate vault reference, expected to be found in the 
+#    OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME> within the object pointed by oci_vaults_dependency.  
+# 5. Replace <REPLACE-BY-BUCKET-NAME> placeholders by the OCI Object Storage buckets that contain the object referred by <REPLACE-BY-OBJECT-NAME>.
+# 6. Replace <REPLACE-BY-OBJECT-NAME> placeholders by the OCI Object Storage objects with the compartments and vaults references. These  
+#    objects are supposedly stored in OCI Object Storage by the modules that manage compartments and vaults.
+#-------------------------------------------------------------------------------------------------------------------------------------------
+
+#---------------------------------------
+# Tenancy Connectivity Variables
+#---------------------------------------
+
+tenancy_ocid         = "<tenancy OCID>"             # Get this from OCI Console (after logging in, go to top-right-most menu item and click option "Tenancy: <your tenancy name>").
+user_ocid            = "<user OCID>"                # Get this from OCI Console (after logging in, go to top-right-most menu item and click option "My profile").
+fingerprint          = "<PEM key fingerprint>"      # The fingerprint can be gathered from your user account. In the "My profile page, click "API keys" on the menu in left hand side).
+private_key_path     = "<path to the private key>"  # This is the full path on your local system to the API signing private key.
+private_key_password = ""                           # This is the password that protects the private key, if any.
+region               = "<your tenancy region>"      # This is your region, where all other events are created. It can be the same as home_region.
+home_region          = "<your tenancy home region>"
+
+#---------------------------------------
+# Input variable
+#---------------------------------------
+
+vaults_configuration = {
+  default_compartment_id = "<REPLACE-BY-COMPARTMENT-REFERENCE>"
+
+  vaults = {
+    VISION-VAULT = {
+      name = "vision-vault"
+    }
+  }
+  keys = {
+    VISION-BUCKET-KEY = {
+      name = "vision-buckey-key"
+      vault_key = "VISION-VAULT"
+      service_grantees = ["objectstorage-us-ashburn-1"]
+      group_grantees = ["vision-appdev-admin-group"]
+      versions = ["1","2"]
+    }
+    VISION-BLOCK-VOLUME-KEY = {
+      name = "vision-block-volume-key"
+      vault_management_endpoint = "<REPLACE-BY-VAULT-MANAGEMENT-ENDPOINT-REFERENCE>"
+      service_grantees = ["blockstorage"]
+      group_grantees = ["vision-appdev-admin-group"]
+    }
+  }
+}
+
+oci_compartments_dependency = {
+  bucket = "<REPLACE-BY-BUCKET-NAME>"
+  object = "<REPLACE-BY-OBJECT-NAME>"
+}
+
+oci_vaults_dependency = {
+  bucket = "<REPLACE-BY-BUCKET-NAME>"
+  object = "<REPLACE-BY-OBJECT-NAME>"
+}

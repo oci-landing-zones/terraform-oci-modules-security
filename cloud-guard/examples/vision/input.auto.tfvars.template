@@ -1,0 +1,43 @@
+# Copyright (c) 2023 Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+# 1. Rename this file to <project-name>.auto.tfvars, where <project-name> is a name of your choice.
+# 2. Provide values for "Tenancy Connectivity Variables".
+# 3. Replace <REPLACE-BY-TENANCY-OCID> placeholder by the appropriate compartment OCID. 
+# 4. Replace <REPLACE-BY-REPORTING-REGION-NAME> placeholder by the actual reporting region name.
+# 4. Replace <REPLACE-BY-TARGET-COMPARTMENT-OCID> placeholders by the appropriate compartment OCIDs. 
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+#---------------------------------------
+# Tenancy Connectivity Variables
+#---------------------------------------
+
+tenancy_ocid         = "<tenancy OCID>"             # Get this from OCI Console (after logging in, go to top-right-most menu item and click option "Tenancy: <your tenancy name>").
+user_ocid            = "<user OCID>"                # Get this from OCI Console (after logging in, go to top-right-most menu item and click option "My profile").
+fingerprint          = "<PEM key fingerprint>"      # The fingerprint can be gathered from your user account. In the "My profile page, click "API keys" on the menu in left hand side.
+private_key_path     = "<path to the private key>"  # This is the full path on your local system to the API signing private key.
+private_key_password = ""                           # This is the password that protects the private key, if any.
+region               = "<your tenancy region>"      # This is your region, where all other events are created. It can be the same as home_region.
+
+#---------------------------------------
+# Input variable
+#---------------------------------------
+
+cloud_guard_configuration = {
+  tenancy_ocid = "<REPLACE-BY-TENANCY-OCID>"
+  enable = true
+  reporting_region = "<REPLACE-BY-REPORTING-REGION-NAME>" # example: "us-ashburn-1"
+  
+  targets = {
+    CLOUD-GUARD-TARGET-1 = {
+      name = "vision-cloud-guard-target-1"
+      resource_id = "<REPLACE-BY-TARGET-COMPARTMENT-OCID>"
+    }  
+    CLOUD-GUARD-TARGET-2 = {
+      name = "vision-cloud-guard-target-1"
+      resource_id = "<REPLACE-BY-TARGET-COMPARTMENT-OCID>"
+      use_cloned_recipes = true
+    }
+  }
+}

@@ -1,0 +1,64 @@
+# Copyright (c) 2023 Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+# 1. Rename this file to <project-name>.auto.tfvars, where <project-name> is a name of your choice.
+# 2. Provide values for "Tenancy Connectivity Variables".
+# 3. Replace <REPLACE-BY-TENANCY-OCID> placeholder by the appropriate compartment OCID. 
+# 4. Replace <REPLACE-BY-REPORTING-REGION-NAME> placeholder by the reporting region name. Example: "us-ashburn-1".
+# 5. Replace <REPLACE-BY-SECURITY-ZONE-COMPARTMENT-REFERENCE> placeholder by the appropriate security zone compartment reference, 
+#    expected to be found in the OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME>.
+# 6. Replace <REPLACE-BY-SECURITY-ZONE-RECIPE-COMPARTMENT-REFERENCE> placeholders by the appropriate security zone recipe compartment references, 
+#    expected to be found in the OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME>.
+# 7. Replace <REPLACE-BY-BUCKET-NAME> placeholder by the OCI Object Storage bucket that contains the object referred by <REPLACE-BY-OBJECT-NAME>.
+# 8. Replace <REPLACE-BY-OBJECT-NAME> placeholder by the OCI Object Storage object that has the compartment references. This object is supposedly 
+#    stored in OCI Object Storage by the module that manages compartments.
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+
+#---------------------------------------
+# Tenancy Connectivity Variables
+#---------------------------------------
+
+tenancy_ocid         = "<tenancy OCID>"             # Get this from OCI Console (after logging in, go to top-right-most menu item and click option "Tenancy: <your tenancy name>").
+user_ocid            = "<user OCID>"                # Get this from OCI Console (after logging in, go to top-right-most menu item and click option "My profile").
+fingerprint          = "<PEM key fingerprint>"      # The fingerprint can be gathered from your user account. In the "My profile page, click "API keys" on the menu in left hand side.
+private_key_path     = "<path to the private key>"  # This is the full path on your local system to the API signing private key.
+private_key_password = ""                           # This is the password that protects the private key, if any.
+region               = "<your tenancy region>"      # This is your region, where all other events are created. It can be the same as home_region.
+
+#---------------------------------------
+# Input variable
+#---------------------------------------
+
+security_zones_configuration = {
+  tenancy_ocid     = "<REPLACE-BY-TENANCY-OCID>"
+  reporting_region = "<REPLACE-BY-REPORTING-REGION-NAME>"
+  
+  security_zones = {
+    SECURITY-ZONE = {
+      name = "vision-security-zone"
+      compartment_id = "<REPLACE-BY-SECURITY-ZONE-COMPARTMENT-REFERENCE>"
+      recipe_key = "CIS-L1-RECIPE"
+    }  
+  }
+
+  recipes = {
+    CIS-L1-RECIPE = {
+      name = "vision-security-zone-cis-level-1-recipe"
+      description = "CIS Level 1 recipe"
+      compartment_id = "<REPLACE-BY-SECURITY-ZONE-RECIPE-COMPARTMENT-REFERENCE>"
+      cis_level = "1"
+    }
+    CIS-L2-RECIPE = {
+      name = "vision-security-zone-cis-level-2-recipe"
+      description = "CIS Level 2 recipe"
+      compartment_id = "<REPLACE-BY-SECURITY-ZONE-RECIPE-COMPARTMENT-REFERENCE>"
+      cis_level = "2"
+    }
+  }
+}
+
+oci_compartments_dependency = {
+  bucket = "<REPLACE-BY-BUCKET-NAME>"
+  object = "<REPLACE-BY-OBJECT-NAME>"
+}

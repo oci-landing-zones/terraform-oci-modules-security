@@ -1,0 +1,70 @@
+# Copyright (c) 2023 Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------
+# 1. Rename this file to <project-name>.auto.tfvars, where <project-name> is a name of your choice.
+# 2. Provide values for "Tenancy Connectivity Variables".
+# 3. Replace <REPLACE-BY-COMPARTMENT-REFERENCE> placeholder by the appropriate compartment reference, expected to be found in the 
+#    OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME> within the object pointed by oci_compartments_dependency.
+# 4. Replace <REPLACE-BY-TARGET-COMPARTMENT-REFERENCE> placeholder by the appropriate compartment reference, expected to be found in the 
+#    OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME> within the object pointed by oci_compartments_dependency.
+# 5. Replace <REPLACE-BY-TARGET-REGISTRY-COMPARTMENT-REFERENCE> placeholder by the appropriate compartment reference, expected to be found in the 
+#    OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME> within the object pointed by oci_compartments_dependency.
+# 6. Replace <REPLACE-BY-BUCKET-NAME> placeholders by the OCI Object Storage buckets that contain the object referred by <REPLACE-BY-OBJECT-NAME>.
+# 7. Replace <REPLACE-BY-OBJECT-NAME> placeholders by the OCI Object Storage objects with the compartments references. This 
+#    object is supposedly stored in OCI Object Storage by the module that manages compartments.
+#--------------------------------------------------------------------------------------------------------------------------------------------------
+
+#---------------------------------------
+# Tenancy Connectivity Variables
+#---------------------------------------
+
+tenancy_ocid         = "<tenancy OCID>"             # Get this from OCI Console (after logging in, go to top-right-most menu item and click option "Tenancy: <your tenancy name>").
+user_ocid            = "<user OCID>"                # Get this from OCI Console (after logging in, go to top-right-most menu item and click option "My profile").
+fingerprint          = "<PEM key fingerprint>"      # The fingerprint can be gathered from your user account. In the "My profile page, click "API keys" on the menu in left hand side.
+private_key_path     = "<path to the private key>"  # This is the full path on your local system to the API signing private key.
+private_key_password = ""                           # This is the password that protects the private key, if any.
+region               = "<your tenancy region>"      # This is your region, where all other events are created. It can be the same as home_region.
+
+#---------------------------------------
+# Input variable
+#---------------------------------------
+
+scanning_configuration = {
+  default_compartment_id = "<REPLACE-BY-COMPARTMENT-REFERENCE>"
+
+  host_recipes = {
+    VISION-HOST-RECIPE = {
+      name = "vision-host-scan-recipe"
+    }
+  }
+
+  host_targets = {
+    VISION-HOST-TARGET = {
+      name = "vision-host-scan-target"
+      target_compartment_id = "<REPLACE-BY-TARGET-COMPARTMENT-REFERENCE>"
+      host_recipe_key = "VISION-HOST-RECIPE" # this is a reference to the recipe defined in host_recipes attribute.
+    }
+  }
+
+  container_recipes = {
+    VISION-CONTAINER-RECIPE = {
+      name = "vision-container-scan-recipe"
+    }
+  }
+
+  container_targets = {
+    VISION-CONTAINER-TARGET = {
+      name = "vision-container-scan-target"
+      target_registry = {
+        compartment_id = "<REPLACE-BY-TARGET-REGISTRY-COMPARTMENT-REFERENCE>"
+      }
+      container_recipe_key = "VISION-CONTAINER-RECIPE" # this is a reference to the recipe defined in container_recipes attribute.
+    }
+  }
+}
+
+oci_compartments_dependency = {
+  bucket = "<REPLACE-BY-BUCKET-NAME>"
+  object = "<REPLACE-BY-OBJECT-NAME>"
+}
