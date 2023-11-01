@@ -59,13 +59,13 @@ module "security_zones" {
 For invoking the module remotely, set the module *source* attribute to the Security Zones module folder in this repository, as shown:
 ```
 module "security_zones" {
-  source = "git@github.com:oracle-quickstart/terraform-oci-cis-landing-zone-security.git//security_zones"
+  source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/security_zones"
   security_zones_configuration = var.security_zones_configuration
 }
 ```
 For referring to a specific module version, append *ref=\<version\>* to the *source* attribute value, as in:
 ```
-  source = "git@github.com:oracle-quickstart/terraform-oci-cis-landing-zone-security.git//security_zones?ref=v0.1.0"
+  source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security//security_zones?ref=v0.1.0"
 ```
 
 ## <a name="functioning">Module Functioning</a>

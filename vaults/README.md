@@ -62,13 +62,13 @@ module "vaults" {
 For invoking the module remotely, set the module *source* attribute to the vaults module folder in this repository, as shown:
 ```
 module "vaults" {
-  source = "git@github.com:oracle-quickstart/terraform-oci-cis-landing-zone-security.git//vaults"
+  source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/vaults"
   vaults_configuration = var.vaults_configuration
 }
 ```
 For referring to a specific module version, append *ref=\<version\>* to the *source* attribute value, as in:
 ```
-  source = "git@github.com:oracle-quickstart/terraform-oci-cis-landing-zone-security.git//vaults?ref=v0.1.0"
+  source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security//vaults?ref=v0.1.0"
 ```
 
 ## <a name="functioning">Module Functioning</a>
