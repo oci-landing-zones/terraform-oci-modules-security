@@ -5,14 +5,14 @@
 # 1. Rename this file to <project-name>.auto.tfvars, where <project-name> is a name of your choice.
 # 2. Provide values for "Tenancy Connectivity Variables".
 # 3. Replace <REPLACE-BY-COMPARTMENT-REFERENCE> placeholder by the appropriate compartment reference, expected to be found in the 
-#    OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME> within the object pointed by oci_compartments_dependency.
+#    OCI Object Storage object named <REPLACE-BY-OBJECT-NAME> in oci_compartments_dependency.
 # 4. Replace <REPLACE-BY-TARGET-COMPARTMENT-REFERENCE> placeholder by the appropriate compartment reference, expected to be found in the 
-#    OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME> within the object pointed by oci_compartments_dependency.
+#    OCI Object Storage object named <REPLACE-BY-OBJECT-NAME> in oci_compartments_dependency.
 # 5. Replace <REPLACE-BY-TARGET-REGISTRY-COMPARTMENT-REFERENCE> placeholder by the appropriate compartment reference, expected to be found in the 
-#    OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME> within the object pointed by oci_compartments_dependency.
-# 6. Replace <REPLACE-BY-BUCKET-NAME> placeholders by the OCI Object Storage buckets that contain the object referred by <REPLACE-BY-OBJECT-NAME>.
-# 7. Replace <REPLACE-BY-OBJECT-NAME> placeholders by the OCI Object Storage objects with the compartments references. This 
-#    object is supposedly stored in OCI Object Storage by the module that manages compartments.
+#    OCI Object Storage object named <REPLACE-BY-OBJECT-NAME> in oci_compartments_dependency.
+# 6. Replace <REPLACE-BY-BUCKET-NAME> placeholder by the OCI Object Storage bucket that contains the object named <REPLACE-BY-OBJECT-NAME>.
+# 7. Replace <REPLACE-BY-OBJECT-NAME> placeholder by the OCI Object Storage object with the compartments references. This 
+#    object is tipically stored in OCI Object Storage by the module that manages compartments.
 #--------------------------------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------
@@ -43,7 +43,7 @@ scanning_configuration = {
     VISION-HOST-TARGET = {
       name = "vision-host-scan-target"
       target_compartment_id = "<REPLACE-BY-TARGET-COMPARTMENT-REFERENCE>"
-      host_recipe_key = "VISION-HOST-RECIPE" # this is a reference to the recipe defined in host_recipes attribute.
+      host_recipe_id = "VISION-HOST-RECIPE" # this is a reference to the recipe defined in host_recipes attribute.
     }
   }
 
@@ -59,7 +59,7 @@ scanning_configuration = {
       target_registry = {
         compartment_id = "<REPLACE-BY-TARGET-REGISTRY-COMPARTMENT-REFERENCE>"
       }
-      container_recipe_key = "VISION-CONTAINER-RECIPE" # this is a reference to the recipe defined in container_recipes attribute.
+      container_recipe_id = "VISION-CONTAINER-RECIPE" # this is a reference to the recipe defined in container_recipes attribute.
     }
   }
 }

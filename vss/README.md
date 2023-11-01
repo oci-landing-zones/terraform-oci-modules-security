@@ -25,6 +25,20 @@ allow group <group> to use instances in compartment <vss-host-target-compartment
 allow group <group> to read repos in compartment <vss-container-target-compartment-name>
 ```
 
+Additionally, VSS requires the following permissions:
+
+```
+allow service vulnerability-scanning-service to manage instances in tenancy
+allow service vulnerability-scanning-service to read compartments in tenancy
+allow service vulnerability-scanning-service to read repos in tenancy
+allow service vulnerability-scanning-service to read vnics in tenancy
+allow service vulnerability-scanning-service to read vnic-attachments in tenancy
+```
+
+### Scanning
+
+Host scanning relies on Vulnerability Scanning cloud agent plugin enabled and running in target instances. After setting your host scanning targets using this module, make sure the plugin is available, enabled and running. In order to enable the plugin, the cloud agent needs an egress path to Oracle Services Network via a Service Gateway. Therefore, also make sure the subnet where the target instances are located have a route rule and security rule allowing such egress path. The [CIS Landing Zone Compute module](https://github.com/oracle-quickstart/terraform-oci-secure-workloads/tree/main/cis-compute-storage) aids in enabling cloud agent plugins.
+
 ### Terraform Version < 1.3.x and Optional Object Type Attributes
 This module relies on [Terraform Optional Object Type Attributes feature](https://developer.hashicorp.com/terraform/language/expressions/type-constraints#optional-object-type-attributes), which is experimental from Terraform 0.14.x to 1.2.x. It shortens the amount of input values in complex object types, by having Terraform automatically inserting a default value for any missing optional attributes. The feature has been promoted and it is no longer experimental in Terraform 1.3.x.
 
@@ -61,25 +75,25 @@ module "scanning" {
 For invoking the module remotely, set the module *source* attribute to the VSS module folder in this repository, as shown:
 ```
 module "scanning" {
-  source = "git@github.com:oracle-quickstart/terraform-oci-cis-landing-zone-security.git//vss"
+  source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/vss"
   scanning_configuration = var.scanning_configuration
 }
 ```
 For referring to a specific module version, append *ref=\<version\>* to the *source* attribute value, as in:
 ```
-  source = "git@github.com:oracle-quickstart/terraform-oci-cis-landing-zone-security.git//vss?ref=v0.1.0"
+  source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security//vss?ref=v0.1.0"
 ```
 
 ## <a name="functioning">Module Functioning</a>
 
 In this module, scanning recipes and targets are defined using the *scanning_configuration* object, that supports the following attributes:
 - **default_compartment_id**: the default compartment for all resources managed by this module. It can be overriden by *compartment_id* attribute in each resource. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
-- **default_defined_tags**: the default defined tags that are applied to all resources managed by this module. It can be overriden by *defined_tags* attribute in each resource.
-- **default_freeform_tags**: the default freeform tags that are applied to all resources managed by this module. It can be overriden by *freeform_tags* attribute in each resource.
-- **host_recipes**: the scanning recipes applicable to Compute instances.
-- **host_targets**: the scanning target Compute instances.
-- **container_recipes**: the scanning recipes applicable to container images.
-- **container_targets**: the scanning target container images. 
+- **default_defined_tags**: (Optional) the default defined tags that are applied to all resources managed by this module. It can be overriden by *defined_tags* attribute in each resource.
+- **default_freeform_tags**: (Optional) the default freeform tags that are applied to all resources managed by this module. It can be overriden by *freeform_tags* attribute in each resource.
+- **host_recipes**: (Optional) the scanning recipes applicable to Compute instances.
+- **host_targets**: (Optional) the scanning target Compute instances.
+- **container_recipes**: (Optional) the scanning recipes applicable to container images.
+- **container_targets**: (Optional) the scanning target container images. 
 
 ### Defining Host Recipes
 
@@ -87,22 +101,22 @@ Within *scanning_configuration*, use the *host_recipes* attribute to define the 
 
 The *host_recipes* attribute supports the following attributes:
 - **name**: the recipe name.
-- **compartment_id**: the compartment where the host recipe is created. *default_compartment_id* is used if undefined. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
-- **port_scan_level**: the port scan level. Valid values: "STANDARD", "LIGHT", "NONE". "STANDARD" checks the 1000 most common port numbers. "LIGHT" checks the 100 most common port numbers. "NONE" does not check for open ports. Default: "STANDARD".
-- **schedule_settings**: the schedule settings for host scans.
-  - **type**: how often the scan occurs. Valid values: "WEEKLY", "DAILY". Default: "WEEKLY".
-  - **day_of_week**: day of week the scan occurs. Only valid for "WEEKLY" scans. Default: "SUNDAY". 
-- **agent_settings**: agent scan settings
-  - **scan_level**: the agent scan level. Valid values: "STANDARD", "NONE". "STANDARD" enables agent-based scanning. "NONE" disables agent-based scanning. Default: "STANDARD".
-  - **vendor**: the vendor for host scan. Valid values: "OCI".
-  - **cis_benchmark_scan_level**: the scan level for CIS benchmark. Valid values: "STRICT", "MEDIUM", "LIGHTWEIGHT", "NONE". "STRICT": if more than 20% of the CIS benchmarks fail, then the target is assigned a risk level of Critical. "MEDIUM": if more than 40% of the CIS benchmarks fail, then the target is assigned a risk level of High. "LIGHTWEIGHT": if more than 80% of the CIS benchmarks fail, then the target is assigned a risk level of High. "NONE": disables CIS benchmark scanning. Default: "STRICT".
-- **file_scan_settings**: the file scan settings for host scans
-  - **enable**: whether file scans are enabled.
-  - **scan_recurrence**: scan recurrences in RFC-5545 section 3.3.10 format. Default: bi-weekly scans. Occurs on *schedule_settings*' *day_of_week* if *type* is "WEEKLY". Occurs on sundays if *schedule_settings*' *type* is "DAILY" ("FREQ=WEEKLY;INTERVAL=2;WKST=SU").
-  - **folders_to_scan**: a list of folders to scan. Default: "/".
-  - **operating_system**: the target operating system for the file scan. Valid values: "LINUX", "WINDOWS". Default: "LINUX".
-- **defined_tags**: the recipe defined tags. *default_defined_tags* is used if undefined.
-- **freeform_tags**: the recipe freeform tags. *default_freeform_tags* is used if undefined.
+- **compartment_id**: (Optional) the compartment where the host recipe is created. *default_compartment_id* is used if undefined. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
+- **port_scan_level**: (Optional) the port scan level. Valid values: "STANDARD", "LIGHT", "NONE". "STANDARD" checks the 1000 most common port numbers. "LIGHT" checks the 100 most common port numbers. "NONE" does not check for open ports. Default: "STANDARD".
+- **schedule_settings**: (Optional) the schedule settings for host scans.
+  - **type**: (Optional) how often the scan occurs. Valid values: "WEEKLY", "DAILY". Default: "WEEKLY".
+  - **day_of_week**: (Optional) day of week the scan occurs. Only valid for "WEEKLY" scans. Default: "SUNDAY". 
+- **agent_settings**: (Optional) agent scan settings
+  - **scan_level**: (Optional) the agent scan level. Valid values: "STANDARD", "NONE". "STANDARD" enables agent-based scanning. "NONE" disables agent-based scanning. Default: "STANDARD".
+  - **vendor**: (Optional) the vendor for host scan. Valid values: "OCI".
+  - **cis_benchmark_scan_level**: (Optional) the scan level for CIS benchmark. Valid values: "STRICT", "MEDIUM", "LIGHTWEIGHT", "NONE". "STRICT": if more than 20% of the CIS benchmarks fail, then the target is assigned a risk level of Critical. "MEDIUM": if more than 40% of the CIS benchmarks fail, then the target is assigned a risk level of High. "LIGHTWEIGHT": if more than 80% of the CIS benchmarks fail, then the target is assigned a risk level of High. "NONE": disables CIS benchmark scanning. Default: "STRICT".
+- **file_scan_settings**: (Optional) the file scan settings for host scans
+  - **enable**: (Optional) whether file scans are enabled.
+  - **scan_recurrence**: (Optional) scan recurrences in RFC-5545 section 3.3.10 format. Default: bi-weekly scans. Occurs on *schedule_settings*' *day_of_week* if *type* is "WEEKLY". Occurs on sundays if *schedule_settings*' *type* is "DAILY" ("FREQ=WEEKLY;INTERVAL=2;WKST=SU").
+  - **folders_to_scan**: (Optional) a list of folders to scan. Default: "/".
+  - **operating_system**: (Optional) the target operating system for the file scan. Valid values: "LINUX", "WINDOWS". Default: "LINUX".
+- **defined_tags**: (Optional) the recipe defined tags. *default_defined_tags* is used if undefined.
+- **freeform_tags**: (Optional) the recipe freeform tags. *default_freeform_tags* is used if undefined.
 
 ### Defining Host Targets
 
@@ -110,13 +124,13 @@ Within *scanning_configuration*, use the *host_targets* attribute to define the 
 
 The *host_targets* attribute supports the following attributes:
 - **name**: the target name.
-- **description**: the target description.
-- **compartment_id**: the compartment where the host target is created. *default_compartment_id* is used if undefined. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
+- **description**: (Optional) the target description.
+- **compartment_id**: (Optional) the compartment where the host target is created. *default_compartment_id* is used if undefined. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
 - **target_compartment_id**: the target compartment containing the Compute instances to scan. All instances in the target compartment are scan targets. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
-- **target_instance_ids**: a list of target Compute instances to scan within *target_compartment_id*. If unset, all instances within *target_compartment_id* are scan targets. This attribute is overloaded. It can be assigned either literal OCIDs or references (keys) to OCIDs, mixed and matched. See [External Dependencies](#ext_dep) for details.
-- **host_recipe_key**: the key (index name) within *host_recipes* that identifies the recipe to apply to the target.
-- **defined_tags**: the host target defined_tags. *default_defined_tags* is used if undefined.
-- **freeform_tags**: the host target freeform_tags. *default_freeform_tags* is used if undefined.
+- **target_instance_ids**: (Optional) a list of target Compute instances to scan within *target_compartment_id*. If unset, all instances within *target_compartment_id* are scan targets. This attribute is overloaded. It can be assigned either literal OCIDs or references (keys) to OCIDs, mixed and matched. See [External Dependencies](#ext_dep) for details.
+- **host_recipe_id**: the recipe id to use for the target. This can be a literal OCID or a referring key within *host_recipes*.
+- **defined_tags**: (Optional) the host target defined_tags. *default_defined_tags* is used if undefined.
+- **freeform_tags**: (Optional) the host target freeform_tags. *default_freeform_tags* is used if undefined.
 
 ### Defining Container Recipes
 
@@ -124,11 +138,11 @@ Within *scanning_configuration*, use the *container_recipes* attribute to define
 
 The *container_recipes* attribute supports the following attributes:
 - **name**: the recipe name.
-- **compartment_id**: the compartment where the container recipe is created. *default_compartment_id* is used if undefined. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
-- **scan_level**: the scan level. Default: "STANDARD".
-- **image_count**: the number of images to scan initially when the recipe is created. Default: 0.
-- **defined_tags**: the recipe defined tags. *default_defined_tags* is used if undefined.
-- **freeform_tags**: the recipe freeform tags. *default_freeform_tags* is used if undefined.
+- **compartment_id**: (Optional) the compartment where the container recipe is created. *default_compartment_id* is used if undefined. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
+- **scan_level**: (Optional) the scan level. Default: "STANDARD".
+- **image_count**: (Optional) the number of images to scan initially when the recipe is created. Default: 1.
+- **defined_tags**: (Optional) the recipe defined tags. *default_defined_tags* is used if undefined.
+- **freeform_tags**: (Optional) the recipe freeform tags. *default_freeform_tags* is used if undefined.
 
 ### Defining Container Targets
 
@@ -136,16 +150,16 @@ Within *scanning_configuration*, use the *container_targets* attribute to define
 
 The *container_targets* attribute supports the following attributes:
 - **name**: the target name.
-- **description**: the target description.
+- **description**: (Optional) the target description.
 - **compartment_id**: the compartment where the container target is created. *default_compartment_id* is used if undefined. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
 - **target_registry**: the target image registry settings.
   - **compartment_id**: the registry target compartment for container images. All repositories in this compartment are scan targets. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
-  - **type**: the registry type. Default: "OCIR".
-  - **repositories**: a list of repositories to scan images. If undefined, the target defaults to scanning all repositories in the *compartment_id*.
-  - **url**: the URL of the registry. Required for non-OCI registry types (for OCI registry types, it is inferred from the tenancy).
-- **container_recipe_key**: the key (index name) within *container_recipes* that identifies the recipe to apply to the target.
-- **defined_tags**: the container target defined_tags. *default_defined_tags* is used if undefined.
-- **freeform_tags**: the container target freeform_tags. *default_freeform_tags* is used if undefined.
+  - **type**: (Optional) the registry type. Default: "OCIR".
+  - **repositories**: (Optional) a list of repositories to scan images. If undefined, the target defaults to scanning all repositories in the *compartment_id*.
+  - **url**: (Optional) the URL of the registry. Required for non-OCI registry types (for OCI registry types, it is inferred from the tenancy).
+- **container_recipe_id**: the recipe id to use for the target. This can be a literal OCID or a referring key within *container_recipes*.
+- **defined_tags**: (Optional) the container target defined_tags. *default_defined_tags* is used if undefined.
+- **freeform_tags**: (Optional) the container target freeform_tags. *default_freeform_tags* is used if undefined.
 
 ## An Example
 
@@ -164,7 +178,7 @@ scanning_configuration = {
     VISION-HOST-TARGET = {
       name = "vision-host-scan-target"
       target_compartment_id = "ocid1.compartment.oc1..aaaaaa...kzq"
-      host_recipe_key = "VISION-HOST-RECIPE" # this is a reference to the recipe defined in host_recipes attribute.
+      host_recipe_id = "VISION-HOST-RECIPE" # this is a reference to the recipe defined in host_recipes attribute.
     }
   }
 
@@ -180,7 +194,7 @@ scanning_configuration = {
       target_registry = {
         compartment_id = "ocid1.compartment.oc1..aaaaaa...kzq"
       }
-      container_recipe_key = "VISION-CONTAINER-RECIPE" # this is a reference to the recipe defined in container_recipes attribute.
+      container_recipe_id = "VISION-CONTAINER-RECIPE" # this is a reference to the recipe defined in container_recipes attribute.
     }
   }
 }  
@@ -205,7 +219,7 @@ scanning_configuration = {
     VISION-HOST-TARGET = {
       name = "vision-host-scan-target"
       target_compartment_id = "APPLICATION-CMP"
-      host_recipe_key = "VISION-HOST-RECIPE" # this is a reference to the recipe defined in host_recipes attribute.
+      host_recipe_id = "VISION-HOST-RECIPE" # this is a reference to the recipe defined in host_recipes attribute.
     }
   }
 
@@ -221,7 +235,7 @@ scanning_configuration = {
       target_registry = {
         compartment_id = "APPLICATION-CMP"
       }
-      container_recipe_key = "VISION-CONTAINER-RECIPE" # this is a reference to the recipe defined in container_recipes attribute.
+      container_recipe_id = "VISION-CONTAINER-RECIPE" # this is a reference to the recipe defined in container_recipes attribute.
     }
   }
 }  

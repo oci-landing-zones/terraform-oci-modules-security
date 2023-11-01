@@ -14,7 +14,7 @@ variable "scanning_configuration" {
       name = string # recipe name.
       port_scan_level = optional(string)
       schedule_settings = optional(object({
-        type = string
+        type = optional(string)
         day_of_week = optional(string)
       }))
       agent_settings = optional(object({
@@ -37,7 +37,7 @@ variable "scanning_configuration" {
       name = string
       target_compartment_id = string # the target compartment. All hosts (instances) in the compartment are scanning targets. It can be either a compartment OCID or a reference (a key) to the compartment OCID.
       target_instance_ids = optional(list(string)) # the specific hosts (instances) to scan in the target compartment. Leave unset to scan all instances. It can be either instances OCIDs or references (keys) to instances OCIDs.
-      host_recipe_key = string # the recipe key within host_recipes attribute to use for the target.
+      host_recipe_id = string # the recipe id to use for the target. This can be a literal OCID or a referring key within host_recipes.
       description = optional(string)
       defined_tags = optional(map(string)) # target defined_tags. default_defined_tags is used if undefined.
       freeform_tags = optional(map(string)) # target freeform_tags. default_freeform_tags is used if undefined.
@@ -55,7 +55,7 @@ variable "scanning_configuration" {
     container_targets = optional(map(object({
       compartment_id = optional(string) # the compartment where the container target is created. default_compartment_id is used if undefined. It can be either a compartment OCID or a reference (a key) to the compartment OCID.
       name = string
-      container_recipe_key = string # the recipe key within container_recipes attribute to use for the target.
+      container_recipe_id = string # the recipe id to use for the target. This can be a literal OCID or a referring key within container_recipes.
       description = optional(string)
       target_registry = object({
         compartment_id = string # the registry target compartment. All containers in the compartment are scanning targets. It can be either a compartment OCID or a reference (a key) to the compartment OCID.

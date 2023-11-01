@@ -18,11 +18,11 @@ allow group <group> to read objects in compartment <bucket-compartment-name> whe
 1. Rename *input.auto.tfvars.template* to *\<project-name\>.auto.tfvars*, where *\<project-name\>* is any name of your choice.
 
 2. Within *\<project-name\>.auto.tfvars*, provide tenancy connectivity information and adjust the *security_zones_configuration* input variable, by making the appropriate substitutions:
-   - Replace \*<REPLACE-BY-COMPARTMENT-REFERENCE\>* placeholder by the appropriate compartment reference, expected to be found in the OCI Object Storage object referred by *\<REPLACE-BY-OBJECT-NAME\>* within the object pointed by *oci_compartments_dependency*.
-   - Replace \*<REPLACE-BY-TARGET-COMPARTMENT-REFERENCE\>* placeholder by the appropriate target compartment reference, expected to be found in the OCI Object Storage object referred by *\<REPLACE-BY-OBJECT-NAME\>* within the object pointed by *oci_compartments_dependency*.
-   - Replace \*<REPLACE-BY-TARGET-REGISTRY-COMPARTMENT-REFERENCE\>* placeholder by the appropriate target registry compartment reference, expected to be found in the OCI Object Storage object referred by *\<REPLACE-BY-OBJECT-NAME\>* within the object pointed by *oci_compartments_dependency*.
-   - Replace *\<REPLACE-BY-BUCKET-NAME\>* placeholders by the OCI Object Storage buckets that contain the object referred by *\<REPLACE-BY-OBJECT-NAME\>*.
-   - Replace *\<REPLACE-BY-OBJECT-NAME\>* placeholders by the OCI Object Storage objects with the compartments references. This object is supposedly stored in OCI Object Storage by the module that manages compartments.
+   - Replace \*<REPLACE-BY-COMPARTMENT-REFERENCE\>* placeholder by the appropriate compartment reference, expected to be found in the OCI Object Storage object named *\<REPLACE-BY-OBJECT-NAME\>* in *oci_compartments_dependency*.
+   - Replace \*<REPLACE-BY-TARGET-COMPARTMENT-REFERENCE\>* placeholder by the appropriate target compartment reference, expected to be found in the OCI Object Storage object named *\<REPLACE-BY-OBJECT-NAME\>* in *oci_compartments_dependency*.
+   - Replace \*<REPLACE-BY-TARGET-REGISTRY-COMPARTMENT-REFERENCE\>* placeholder by the appropriate target registry compartment reference, expected to be found in the OCI Object Storage object named *\<REPLACE-BY-OBJECT-NAME\>* in *oci_compartments_dependency*.
+   - Replace *\<REPLACE-BY-BUCKET-NAME\>* placeholder by the OCI Object Storage bucket that contains the object named *\<REPLACE-BY-OBJECT-NAME\>*.
+   - Replace *\<REPLACE-BY-OBJECT-NAME\>* placeholder by the OCI Object Storage object with the compartments references. This object is tipically stored in OCI Object Storage by the module that manages compartments.
 
 The OCI Object Storage object with compartments dependencies (*oci_compartments_dependency*) is expected to have a structure like this:
 ```
