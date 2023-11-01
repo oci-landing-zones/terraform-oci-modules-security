@@ -12,7 +12,7 @@ variable "scanning_configuration" {
   description = "Vulnerability scanning configuration settings, defining all aspects to manage scanning aspects in OCI. Please see the comments within each attribute for details."
   type = object({
 
-    default_compartment_id = string, # the default compartment where all resources are defined. It's overriden by the compartment_id attribute within vaults and keys attributes. It can be either a compartment OCID or a reference (a key) to the compartment OCID.
+    default_compartment_id = string, # the default compartment where all resources are defined. It can be overriden by the compartment_id attribute within each object. It can be either a compartment OCID or a reference (a key) to the compartment OCID.
     default_defined_tags   = optional(map(string)), # the default defined tags. It's overriden by the defined_tags attribute within each object.
     default_freeform_tags  = optional(map(string)), # the default freeform tags. It's overriden by the frreform_tags attribute within each object.
 
