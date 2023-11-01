@@ -20,3 +20,8 @@ output "scanning_container_targets" {
   description = "The VSS container targets."
   value       = var.enable_output ? oci_vulnerability_scanning_container_scan_target.these : null
 }
+
+output "host_scanning_plugin_state" {
+  description = "The Cloud Agent VSS plugin state for target instances."
+  value       = var.enable_output ? local.vss_plugin_state : null
+}

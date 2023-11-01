@@ -26,7 +26,7 @@ region               = "<your tenancy region>"      # This is your region, where
 #---------------------------------------
 
 scanning_configuration = {
-  default_compartment_ocid = "<REPLACE-BY-COMPARTMENT-OCID>"
+  default_compartment_id = "<REPLACE-BY-COMPARTMENT-OCID>"
 
   host_recipes = {
     VISION-HOST-RECIPE = {
@@ -37,8 +37,8 @@ scanning_configuration = {
   host_targets = {
     VISION-HOST-TARGET = {
       name = "vision-host-scan-target"
-      target_compartment_ocid = "<REPLACE-BY-TARGET-COMPARTMENT-OCID>"
-      host_recipe_key = "VISION-HOST-RECIPE" # this is a reference to the recipe defined in host_recipes attribute.
+      target_compartment_id = "<REPLACE-BY-TARGET-COMPARTMENT-OCID>"
+      host_recipe_id = "VISION-HOST-RECIPE" # this is a reference to the recipe defined in host_recipes attribute.
     }
   }
 
@@ -52,9 +52,9 @@ scanning_configuration = {
     VISION-CONTAINER-TARGET = {
       name = "vision-container-scan-target"
       target_registry = {
-        compartment_ocid = "<REPLACE-BY-TARGET-REGISTRY-COMPARTMENT-OCID>"
+        compartment_id = "<REPLACE-BY-TARGET-REGISTRY-COMPARTMENT-OCID>"
       }
-      container_recipe_key = "VISION-CONTAINER-RECIPE" # this is a reference to the recipe defined in container_recipes attribute.
+      container_recipe_id = "VISION-CONTAINER-RECIPE" # this is a reference to the recipe defined in container_recipes attribute.
     }
   }
 }
