@@ -35,7 +35,7 @@ vaults_configuration = {
     VISION-BUCKET-KEY = {
       name = "vision-buckey-key"
       vault_key = "VISION-VAULT"
-      service_grantees = ["objectstorage-us-ashburn-1"]
+      service_grantees = ["objectstorage-us-ashburn-1"] # "us-ashburn-1" is to be replaced by your region name.
       group_grantees = ["vision-appdev-admin-group"]
       versions = ["1","2"]
     }
