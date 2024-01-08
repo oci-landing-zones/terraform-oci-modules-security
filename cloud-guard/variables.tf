@@ -21,6 +21,7 @@ variable "cloud_guard_configuration" {
       freeform_tags = optional(map(string)) # the target freeform tags. default_freeform_tags is used if undefined.
     })))
   })  
+  default = null
 }
 
 variable enable_output {

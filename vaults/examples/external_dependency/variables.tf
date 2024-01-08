@@ -47,8 +47,8 @@ variable "vaults_configuration" {
       service_grantees = optional(list(string)) # the OCI service names allowed to use the key.
       group_grantees = optional(list(string)) # the IAM group names allowed to use the key-delegate.
     })))
-
   })
+  default = null
 }
 
 variable "oci_compartments_dependency" {

@@ -73,6 +73,6 @@ variable "scanning_configuration" {
       defined_tags = optional(map(string)) # target defined_tags. default_defined_tags is used if undefined.
       freeform_tags = optional(map(string)) # target freeform_tags. default_freeform_tags is used if undefined.
     })))
-
   })
+  default = null
 }
