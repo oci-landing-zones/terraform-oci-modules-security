@@ -37,8 +37,8 @@ variable "security_zones_configuration" {
       defined_tags = optional(map(string))
       freeform_tags = optional(map(string))
     })) 
-
   })
+  default = null
 }
 
 variable "oci_compartments_dependency" {

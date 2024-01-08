@@ -6,7 +6,7 @@ resource "oci_vulnerability_scanning_host_scan_recipe" "these" {
   lifecycle {
       create_before_destroy = true
   }  
-  for_each = var.scanning_configuration.host_recipes != null ? var.scanning_configuration.host_recipes : {}
+  for_each = var.scanning_configuration != null ? (var.scanning_configuration.host_recipes != null ? var.scanning_configuration.host_recipes : {}) : {}
     compartment_id = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id) : (length(regexall("^ocid1.*$", var.scanning_configuration.default_compartment_id)) > 0 ? var.scanning_configuration.default_compartment_id : var.compartments_dependency[var.scanning_configuration.default_compartment_id].id)
     display_name = each.value.name 
     port_settings {
@@ -39,7 +39,7 @@ resource "oci_vulnerability_scanning_host_scan_recipe" "these" {
 
 #-- Host targets
 resource "oci_vulnerability_scanning_host_scan_target" "these" {
-  for_each = var.scanning_configuration.host_targets != null ? var.scanning_configuration.host_targets : {}
+  for_each = var.scanning_configuration != null ? (var.scanning_configuration.host_targets != null ? var.scanning_configuration.host_targets : {}) : {}
     compartment_id = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id) : (length(regexall("^ocid1.*$", var.scanning_configuration.default_compartment_id)) > 0 ? var.scanning_configuration.default_compartment_id : var.compartments_dependency[var.scanning_configuration.default_compartment_id].id)
     display_name          = each.value.name
     description           = each.value.description != null ? each.value.description : each.value.name
@@ -55,7 +55,7 @@ resource "oci_vulnerability_scanning_container_scan_recipe" "these" {
   lifecycle {
       create_before_destroy = true
   }  
-  for_each = var.scanning_configuration.container_recipes != null ? var.scanning_configuration.container_recipes : {}
+  for_each = var.scanning_configuration != null ? (var.scanning_configuration.container_recipes != null ? var.scanning_configuration.container_recipes : {}) : {}
     compartment_id = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id) : (length(regexall("^ocid1.*$", var.scanning_configuration.default_compartment_id)) > 0 ? var.scanning_configuration.default_compartment_id : var.compartments_dependency[var.scanning_configuration.default_compartment_id].id)
     display_name = each.value.name
     scan_settings {
@@ -67,7 +67,7 @@ resource "oci_vulnerability_scanning_container_scan_recipe" "these" {
 }
 
 locals {
-  target_container_scan_cmps = [for t in (var.scanning_configuration.container_targets != null ? var.scanning_configuration.container_targets : {}) : length(regexall("^ocid1.*$", t.target_registry.compartment_id)) > 0 ? t.target_registry.compartment_id : var.compartments_dependency[t.target_registry.compartment_id].id]
+  target_container_scan_cmps = var.scanning_configuration != null ? ([for t in (var.scanning_configuration.container_targets != null ? var.scanning_configuration.container_targets : {}) : length(regexall("^ocid1.*$", t.target_registry.compartment_id)) > 0 ? t.target_registry.compartment_id : var.compartments_dependency[t.target_registry.compartment_id].id]) : []
 }
 data "oci_artifacts_container_repositories" "these" {
   for_each = toset(local.target_container_scan_cmps)
@@ -76,7 +76,7 @@ data "oci_artifacts_container_repositories" "these" {
 
 #-- Container targets
 resource "oci_vulnerability_scanning_container_scan_target" "these" {
-  for_each = var.scanning_configuration.container_targets != null ? var.scanning_configuration.container_targets : {}
+  for_each = var.scanning_configuration != null ? (var.scanning_configuration.container_targets != null ? var.scanning_configuration.container_targets : {}) : {}
     lifecycle {
       precondition {
         condition = length(data.oci_artifacts_container_repositories.these[length(regexall("^ocid1.*$", each.value.target_registry.compartment_id)) > 0 ? each.value.target_registry.compartment_id : var.compartments_dependency[each.value.target_registry.compartment_id].id].container_repository_collection[0].items) > 0
@@ -98,7 +98,7 @@ resource "oci_vulnerability_scanning_container_scan_target" "these" {
 }
 
 locals {
-  target_host_scan_cmps = [for t in (var.scanning_configuration.host_targets != null ? var.scanning_configuration.host_targets : {}) : length(regexall("^ocid1.*$", t.target_compartment_id)) > 0 ? t.target_compartment_id : var.compartments_dependency[t.target_compartment_id].id]
+  target_host_scan_cmps = var.scanning_configuration != null ? ([for t in (var.scanning_configuration.host_targets != null ? var.scanning_configuration.host_targets : {}) : length(regexall("^ocid1.*$", t.target_compartment_id)) > 0 ? t.target_compartment_id : var.compartments_dependency[t.target_compartment_id].id]) : []
   instances = flatten([
     for cmp_id in local.target_host_scan_cmps : [
       for i in data.oci_core_instances.these[cmp_id].instances : [{"id" : i.id, "compartment_id" : i.compartment_id}]

@@ -8,10 +8,10 @@ locals {
   # Security Zone recipes aligned to CIS 1.2 Level 2
   cis_1_2_l2_policy_names = ["deny block_volume_without_vault_key", "deny boot_volume_without_vault_key", "deny buckets_without_vault_key", "deny file_system_without_vault_key"]
 
-  sz_policies = {for policy in data.oci_cloud_guard_security_policies.these.security_policy_collection[0].items : policy.friendly_name => policy.id}
+  sz_policies = {for policy in (data.oci_cloud_guard_security_policies.these.security_policy_collection != null ? data.oci_cloud_guard_security_policies.these.security_policy_collection[0].items : []) : policy.friendly_name => policy.id}
 
-  cis_1_2_l1_policy_ocids = [for name in local.cis_1_2_l1_policy_names : local.sz_policies[name]]
-  cis_1_2_l2_policy_ocids = [for name in local.cis_1_2_l2_policy_names : local.sz_policies[name]]
+  cis_1_2_l1_policy_ocids = [for name in local.cis_1_2_l1_policy_names : length(local.sz_policies) > 0 ? local.sz_policies[name]: "void"]
+  cis_1_2_l2_policy_ocids = [for name in local.cis_1_2_l2_policy_names : length(local.sz_policies) > 0 ? local.sz_policies[name]: "void"]
 
   # For reference, below are the OCIDs for the policy names above in commercial realm regions
   # CIS 1.2 Level 1
@@ -41,7 +41,7 @@ resource "oci_cloud_guard_cloud_guard_configuration" "this" {
 }
 
 resource "oci_cloud_guard_security_recipe" "these" {
-  for_each = var.security_zones_configuration.recipes != null ? var.security_zones_configuration.recipes : {}
+  for_each = var.security_zones_configuration != null ? (var.security_zones_configuration.recipes != null ? var.security_zones_configuration.recipes : {}) : {}
     compartment_id    = length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id
     display_name      = each.value.name
     description       = each.value.description != null ? each.value.description : each.value.name
@@ -51,7 +51,7 @@ resource "oci_cloud_guard_security_recipe" "these" {
 }
 
 resource "oci_cloud_guard_security_zone" "these" {
-  for_each = var.security_zones_configuration.security_zones
+  for_each = var.security_zones_configuration != null ? var.security_zones_configuration.security_zones : {}
     compartment_id    = length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id
     display_name            = each.value.name
     description             = each.value.description != null ? each.value.description : each.value.name

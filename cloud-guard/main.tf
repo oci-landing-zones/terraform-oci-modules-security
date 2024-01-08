@@ -3,10 +3,10 @@
 
 locals {
   is_cloud_guard_enabled = data.oci_cloud_guard_cloud_guard_configuration.this.status == "ENABLED" ? true : length(oci_cloud_guard_cloud_guard_configuration.this) > 0 ? (oci_cloud_guard_cloud_guard_configuration.this[0].status == "ENABLED" ? true : false) : false
-  cloned_recipes_prefix = var.cloud_guard_configuration.cloned_recipes_prefix != null ? var.cloud_guard_configuration.cloned_recipes_prefix : "oracle-cloned"
+  cloned_recipes_prefix = var.cloud_guard_configuration != null ? (var.cloud_guard_configuration.cloned_recipes_prefix != null ? var.cloud_guard_configuration.cloned_recipes_prefix : "oracle-cloned") : ""
   
   is_create_cloned_recipes = length(flatten([
-    for target_value in (var.cloud_guard_configuration.targets != null ? var.cloud_guard_configuration.targets : {}) : [target_value.use_cloned_recipes]
+    for target_value in (var.cloud_guard_configuration != null ? (var.cloud_guard_configuration.targets != null ? var.cloud_guard_configuration.targets : {}) : {}) : [target_value.use_cloned_recipes]
   if coalesce(target_value.use_cloned_recipes,false) == true ])) > 0
 }
 
@@ -25,7 +25,7 @@ resource "oci_cloud_guard_cloud_guard_configuration" "this" {
 }
 
 resource "oci_cloud_guard_target" "these" {
-  for_each = var.cloud_guard_configuration.targets != null ? var.cloud_guard_configuration.targets : {}
+  for_each = var.cloud_guard_configuration != null ? (var.cloud_guard_configuration.targets != null ? var.cloud_guard_configuration.targets : {}) : {}
     #-- If resource_type is null or resource_type == "COMPARTMENT", the compartment_ocid defaults to target_resource_ocid.
     compartment_id       = each.value.resource_type != null ? (each.value.resource_type == "COMPARTMENT" ? (length(regexall("^ocid1.*$", each.value.resource_id)) > 0 ? each.value.resource_id : var.compartments_dependency[each.value.resource_id].id) : (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id)) : (length(regexall("^ocid1.*$", each.value.resource_id)) > 0 ? each.value.resource_id : var.compartments_dependency[each.value.resource_id].id)
     display_name         = each.value.name

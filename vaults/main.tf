@@ -4,7 +4,7 @@
 locals {
 
   keys_policies = flatten([
-    for key_key, key_value in (var.vaults_configuration.keys != null ? var.vaults_configuration.keys : {}) : {
+    for key_key, key_value in (var.vaults_configuration != null ? (var.vaults_configuration.keys != null ? var.vaults_configuration.keys : {}) : {}) : {
       key = key_key
       compartment_id = key_value.compartment_id != null ? (length(regexall("^ocid1.*$", key_value.compartment_id)) > 0 ? key_value.compartment_id : var.compartments_dependency[key_value.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id)
       name = "${key_value.name}-policy"
@@ -17,7 +17,7 @@ locals {
   ])
 
   keys_versions = flatten([
-    for key_key, key_value in (var.vaults_configuration.keys != null ? var.vaults_configuration.keys : {}) : [
+    for key_key, key_value in (var.vaults_configuration != null ? (var.vaults_configuration.keys != null ? var.vaults_configuration.keys : {}) : {}) : [
       for version in (key_value.versions != null ? key_value.versions : []) : {
         key_key = key_key
         version_key = "${key_key}.${version}"
@@ -31,13 +31,13 @@ locals {
 #-- Used for retrieving the compartment name to use in policy statements
 data "oci_identity_compartment" "managed_keys" {
   provider = oci.home
-  for_each = { for k, v in var.vaults_configuration.keys : k => {compartment_id = v.compartment_id != null ? (length(regexall("^ocid1.*$", v.compartment_id)) > 0 ? v.compartment_id : var.compartments_dependency[v.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id) } }
+  for_each = { for k, v in (var.vaults_configuration != null ? (var.vaults_configuration.keys != null ? var.vaults_configuration.keys : {}) : {}) : k => {compartment_id = v.compartment_id != null ? (length(regexall("^ocid1.*$", v.compartment_id)) > 0 ? v.compartment_id : var.compartments_dependency[v.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id) } }
     id = each.value.compartment_id
 } 
 
 resource "oci_kms_vault" "these" {
   provider = oci  
-  for_each = var.vaults_configuration.vaults != null ? var.vaults_configuration.vaults : {}
+  for_each = var.vaults_configuration != null ? (var.vaults_configuration.vaults != null ? var.vaults_configuration.vaults : {}) : {}
     compartment_id = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id)
     display_name   = each.value.name
     vault_type     = upper(coalesce(each.value.type,"DEFAULT"))
@@ -60,7 +60,7 @@ resource "oci_kms_key" "these" {
       error_message = "VALIDATION FAILURE : either vault_key or vault_management_endpoint must be provided. Otherwise it is not possible to know which vault the key belongs to."
     }
   }
-  for_each = var.vaults_configuration.keys != null ? var.vaults_configuration.keys : {}
+  for_each = var.vaults_configuration != null ? (var.vaults_configuration.keys != null ? var.vaults_configuration.keys : {}) : {}
     compartment_id      = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id)
     display_name        = each.value.name
     management_endpoint = each.value.vault_management_endpoint != null ? length(regexall("^https://.*$", each.value.vault_management_endpoint)) > 0 ? each.value.vault_management_endpoint : var.vaults_dependency[each.value.vault_management_endpoint].management_endpoint : oci_kms_vault.these[each.value.vault_key].management_endpoint
@@ -107,13 +107,13 @@ resource "oci_identity_policy" "managed_keys" {
 #-- Used for retrieving the compartment name to use in policy statements
 data "oci_identity_compartment" "existing_keys" {
   provider = oci.home
-  for_each = var.vaults_configuration.existing_keys_grants != null ? var.vaults_configuration.existing_keys_grants : {}
+  for_each = var.vaults_configuration != null ? (var.vaults_configuration.existing_keys_grants != null ? var.vaults_configuration.existing_keys_grants : {}) : {}
     id = each.value.compartment_ocid
 } 
 
 resource "oci_identity_policy" "existing_keys" {
   provider = oci.home
-  for_each = var.vaults_configuration.existing_keys_grants != null ? var.vaults_configuration.existing_keys_grants : {}
+  for_each = var.vaults_configuration != null ? (var.vaults_configuration.existing_keys_grants != null ? var.vaults_configuration.existing_keys_grants : {}) : {}
     name           = "${lower(each.key)}-policy"
     description    = "CIS Landing Zone policy allowing access to keys in the Vault service."
     compartment_id = length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id
