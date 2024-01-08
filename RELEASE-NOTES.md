@@ -1,4 +1,8 @@
-# # November 01, 2023 Release Notes - 0.1.1
+# # January 08, 2024 Release Notes - 0.1.2
+
+## Updates
+### All Modules
+1. All modules now accept null value as the input variable assignment. This allows for easier automation of composed solutions.
 
 ## Updates
 1. [VSS Module](#0-1-1-vss-updates)
