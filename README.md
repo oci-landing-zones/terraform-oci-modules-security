@@ -5,6 +5,7 @@
 This repository contains Terraform OCI (Oracle Cloud Infrastructure) modules for security services that help customers align their OCI implementations with the CIS (Center for Internet Security) OCI Foundations Benchmark recommendations.
 
 The following modules are available:
+- [Bastion Service](./bastion-service/)
 - [Cloud Guard](./cloud-guard/)
 - [Security Zones](./security-zones/)
 - [Vaults](./vaults/) (a.k.a KMS)
