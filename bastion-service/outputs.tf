@@ -5,11 +5,12 @@ output "bastions" {
   description = "The bastions service details"
   value       = var.enable_output ? oci_bastion_bastion.these : null
 }
+
 output "sessions" {
   description = "The bastion sessions connections string"
-  value = var.enable_output ? [for sessions in oci_bastion_session.these:
-              {for key in var.sessions_configuration["sessions"]:
-                sessions.display_name => key.ssh_private_key != null ? replace(replace(sessions.ssh_metadata["command"], "\"", "'"), "<privateKey>", key.ssh_private_key) : replace(sessions.ssh_metadata["command"], "\"", "'")
-              }
+  value = var.enable_output ? [for sessions in oci_bastion_session.these :
+    { for key in var.sessions_configuration["sessions"] :
+      sessions.display_name => key.ssh_private_key != null ? sessions.target_resource_details[0].session_type != "PORT_FORWARDING" ? replace(replace(sessions.ssh_metadata["command"], "\"", "'"), "<privateKey>", key.ssh_private_key) : replace(replace(replace(sessions.ssh_metadata["command"], "\"", "'"), "<privateKey>", key.ssh_private_key), "<localPort>", key.target_port) : replace(sessions.ssh_metadata["command"], "\"", "'")
+    }
   ] : null
 }
