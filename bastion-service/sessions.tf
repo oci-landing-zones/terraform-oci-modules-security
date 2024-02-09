@@ -13,7 +13,7 @@ resource "oci_bastion_session" "these" {
     }
     ## Check 3: Check if target_resource_id and target_user are used when the session type is MANAGED_SSH
     precondition {
-      condition     = each.value.session_type == "MANAGED_SSH" ? length(regexall("^ocid1.*$", each.value.target_resource)) > 0 && each.value.target_user != null : true
+      condition     = each.value.session_type == "MANAGED_SSH" ? (length(regexall("^ocid1.*$", each.value.target_resource)) > 0 || var.instances_dependency[each.value.target_resource] != null) && each.value.target_user != null : true
       error_message = "VALIDATION FAILURE in session \"${each.key}\": The ocid of resource and target_user must be used when the session type is MANAGED_SSH."
     }
     ## Check 3: Check if session type is specified in default_session_type or session_type
