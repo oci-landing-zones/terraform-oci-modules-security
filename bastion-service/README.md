@@ -68,7 +68,6 @@ The defined **default_** attributes are the following:
 - **default_ssh_public_key** &ndash; (Optional)default SSH public key path used to access the session. It can be overriden by the *ssh_public_key* attribute in each session.
 - **default_session_type** &ndash; (Optional) default session type for all the sessions. It can be overridden by *session_type* attribute in each session.
 
-#### <a name="sessions">Sessions</a>
 Sessions are defined using the  **sessions** attribute. In Terraform terms, it is a map of objects, where each object is referred by an identifying key. The following attributes are supported:
 - **bastion_id** &ndash; the OCID or the key of Bastion where the session will be created.
 - **ssh_public_key** &ndash; (Optional) the ssh_public_key path used by the session to connect to target. The default_ssh_public_key is used if this is not defined.
@@ -135,7 +134,7 @@ Example:
     }
   }, 
 } 
-
+```
 ## <a name="related">Related Documentation</a>
 - [Bastions](https://docs.oracle.com/en-us/iaas/Content/Bastion/Concepts/bastionoverview.htm)
 - [Sessions](https://docs.oracle.com/en-us/iaas/Content/Bastion/Tasks/managingsessions.htm)
