@@ -16,7 +16,7 @@ For Sessions:
 - The session time to live is set to 3h.
 - The session target_port is set on 22.
 - The session target_user is set to opc.
-- The session will be created on the bastion1.
+- The session will be created on the BASTION-1.
 
 See [input.auto.tfvars.template](./input.auto.tfvars.template) for the variables configuration.
 

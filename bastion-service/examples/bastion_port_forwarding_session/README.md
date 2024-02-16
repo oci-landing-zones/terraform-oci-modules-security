@@ -14,7 +14,7 @@ For Bastions:
 For Sessions:
 - The session type will be PORT_FORWARDING.
 - The session time to live is set to 3h.
-- The session will be created on the bastion1.
+- The session will be created on the BASTION-1.
 
 See [input.auto.tfvars.template](./input.auto.tfvars.template) for the variables configuration.
 
