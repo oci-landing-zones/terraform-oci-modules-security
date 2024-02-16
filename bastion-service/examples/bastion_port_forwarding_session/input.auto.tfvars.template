@@ -24,7 +24,7 @@
 
 bastions_configuration = {
     bastions = { 
-      bastion1 = {
+      BASTION-1 = {
         bastion_type                          = "STANDARD"
         compartment_id                        = "<REPLACE-BY-COMPARTMENT-OCID>"
         subnet_id                             = "<REPLACE-BY-SUBNET-OCID>"
@@ -35,8 +35,8 @@ bastions_configuration = {
 }
 sessions_configuration = {
     sessions = {
-      session1 = {
-        bastion_id             = "bastion1"
+      SESSION-1 = {
+        bastion_id             = "BASTION-1"
         ssh_public_key         = "<REPLACE-BY-SSH-PUBLIC-KEY-PATH>"
         ssh_private_key        = "<REPLACE-BY-SSH-PRIVATE-KEY-PATH>"
         session_type           = "PORT_FORWARDING"
