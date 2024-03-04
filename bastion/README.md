@@ -20,16 +20,15 @@ Check the [examples](./examples/) folder for actual module usage.
 ### IAM Permissions
 
 This module requires the following OCI IAM permissions:
-For deploying Bastions:
 ```
-Allow group <group-name> to manage bastion-family in compartment <compartment_name>
-Allow group <group-name> to read virtual-network-family in compartment <compartment_name>
-Allow group <group-name> to use vnics in compartment <compartment_name>
-Allow group <group-name> to use subnets in compartment <compartment_name>
-Allow group <group-name> to manage private-ips in compartment <compartment_name>
-Allow group <group-name> to read instance-family in compartment <compartment_name>
-Allow group <group-name> to read instance-agent-plugins in compartment <compartment_name>
-Allow group <group-name> to inspect work-requests in compartment <compartment_name>
+Allow group <GROUP-NAME> to manage bastion-family in compartment <BASTION-COMPARTMENT-NAME>
+Allow group <GROUP-NAME> to read virtual-network-family in compartment <NETWORK-COMPARTMENT-NAME>
+Allow group <GROUP-NAME> to use vnics in compartment <NETWORK-COMPARTMENT-NAME>
+Allow group <GROUP-NAME> to use subnets in compartment <NETWORK-COMPARTMENT-NAME>
+Allow group <GROUP-NAME> to manage private-ips in compartment <NETWORK-COMPARTMENT-NAME>
+Allow group <GROUP-NAME> to read instance-family in compartment <TARGET-INSTANCE-COMPARTMENT-NAME>
+Allow group <GROUP-NAME> to read instance-agent-plugins in compartment <TARGET-INSTANCE-COMPARTMENT-NAME>
+Allow group <GROUP-NAME> to inspect work-requests in compartment <BASTION-COMPARTMENT-NAME>
 ```
 For more information about Bastion Policies [click here](https://docs.oracle.com/en-us/iaas/Content/Bastion/Tasks/managingbastions.htm).
 
@@ -122,6 +121,7 @@ Example:
   }, 
 } 
 ```
+
 - **clusters_dependency** &ndash; A map of objects containing the externally managed clusters resources this module may depend on. All map objects must have the same type and should contain the following attributes:
   - A *private_endpoint* attribute with endpoint IP.
 
@@ -138,8 +138,6 @@ Example:
 ## <a name="related">Related Documentation</a>
 - [Bastions](https://docs.oracle.com/en-us/iaas/Content/Bastion/Concepts/bastionoverview.htm)
 - [Sessions](https://docs.oracle.com/en-us/iaas/Content/Bastion/Tasks/managingsessions.htm)
-
-
 
 ## <a name="issues">Known Issues</a>
 None

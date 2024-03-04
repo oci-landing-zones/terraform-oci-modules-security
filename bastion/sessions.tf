@@ -1,25 +1,28 @@
+# Copyright (c) 2024, Oracle and/or its affiliates. All rights reserved.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
 resource "oci_bastion_session" "these" {
   for_each = var.sessions_configuration != null ? var.sessions_configuration["sessions"] : {}
   lifecycle {
     ## Check 1: Check if the public key is provided in default_ssh_public_key or ssh_public_key
     precondition {
       condition     = each.value.ssh_public_key != null || var.sessions_configuration.default_ssh_public_key != null
-      error_message = "VALIDATION FAILURE in session \"${each.key}\": A path to the public key must be provided in default_ssh_public_key or ssh_public_key"
+      error_message = "VALIDATION FAILURE in session \"${each.key}\": A path to the public key must be provided in \"default_ssh_public_key\" or \"ssh_public_key\"."
     }
     ## Check 2: Check if fqdn is used when the session type is PORT_FORWARDING
     precondition {
       condition     = length(regexall("^[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", each.value.target_resource)) > 0 ? each.value.session_type == "PORT_FORWARDING" : true
-      error_message = "VALIDATION FAILURE in session \"${each.key}\": The FQDN can be used only when the session type is PORT_FORWARDING."
+      error_message = "VALIDATION FAILURE in session \"${each.key}\": The FQDN can be used only when the \"session_type\" is \"PORT_FORWARDING\"."
     }
     ## Check 3: Check if target_resource_id and target_user are used when the session type is MANAGED_SSH
     precondition {
-      condition     = each.value.session_type == "MANAGED_SSH" ? (length(regexall("^ocid1.*$", each.value.target_resource)) > 0 || var.instances_dependency[each.value.target_resource] != null) && each.value.target_user != null : true
-      error_message = "VALIDATION FAILURE in session \"${each.key}\": The ocid of resource and target_user must be used when the session type is MANAGED_SSH."
+      condition     = each.value.session_type == "MANAGED_SSH" ? (each.value.target_user == null ? false : true) : true
+      error_message = "VALIDATION FAILURE in session \"${each.key}\": \"target_user\" attribute must be set when \"session_type\" is \"MANAGED_SSH\"."
     }
     ## Check 3: Check if session type is specified in default_session_type or session_type
     precondition {
       condition     = each.value.session_type != null || var.sessions_configuration.default_session_type != null
-      error_message = "VALIDATION FAILURE in bastion \"${each.key}\": You must provide at least one CIDR block either in session_type or default_session_type."
+      error_message = "VALIDATION FAILURE in bastion \"${each.key}\": You must provide at least one CIDR block either in \"session_type\" or \"default_session_type\"."
     }
   }
   bastion_id = length(regexall("^ocid1.*$", each.value.bastion_id)) > 0 ? each.value.bastion_id : oci_bastion_bastion.these[each.value.bastion_id].id

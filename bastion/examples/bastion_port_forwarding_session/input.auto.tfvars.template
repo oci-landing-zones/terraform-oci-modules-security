@@ -23,27 +23,25 @@
 #---------------------------------------
 
 bastions_configuration = {
-    bastions = { 
-      BASTION-1 = {
-        bastion_type                          = "STANDARD"
-        compartment_id                        = "<REPLACE-BY-COMPARTMENT-OCID>"
-        subnet_id                             = "<REPLACE-BY-SUBNET-OCID>"
-        cidr_block_allow_list                 = ["<REPLACE-BY-CIDR>"]
-        name                                  = "<REPLACE-BY-BASTION-NAME>"
+  bastions = { 
+    BASTION-1 = {
+      compartment_id        = "<REPLACE-BY-COMPARTMENT-OCID>"
+      subnet_id             = "<REPLACE-BY-SUBNET-OCID>"
+      cidr_block_allow_list = ["<REPLACE-BY-CIDR>"]
+      name                  = "BastionExample2"
     }
   }
 }
 sessions_configuration = {
     sessions = {
       SESSION-1 = {
-        bastion_id             = "BASTION-1"
-        ssh_public_key         = "<REPLACE-BY-SSH-PUBLIC-KEY-PATH>"
-        ssh_private_key        = "<REPLACE-BY-SSH-PRIVATE-KEY-PATH>"
-        session_type           = "MANAGED_SSH"
-        target_resource        = "<REPLACE-BY-TARGET-INSTANCE-OCID>"
-        target_user            = "opc"
-        target_port            = 22
-        session_name           = "<REPLACE-BY-SESSION-NAME>"
+        bastion_id      = "BASTION-1"
+        ssh_public_key  = "<REPLACE-BY-SSH-PUBLIC-KEY-PATH>"
+        ssh_private_key = "<REPLACE-BY-SSH-PRIVATE-KEY-PATH>"
+        session_type    = "PORT_FORWARDING"
+        target_resource = "<REPLACE-BY-TARGET-RESOURCE-OCID>"
+        target_port     = "<REPLACE-BY-TARGET-PORT-OCID>"
+        session_name    = "PortForwardingByTerraform"
       }
   }
 }

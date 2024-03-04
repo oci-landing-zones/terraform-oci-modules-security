@@ -1,24 +1,25 @@
-# Copyright (c) 2023 Oracle and/or its affiliates.
+# Copyright (c) 2024, Oracle and/or its affiliates. All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 variable "bastions_configuration" {
   description = "Bastion configuration attributes."
   type = object({
-    default_compartment_id         = optional(string)       # the default compartment where all resources are defined. It's overriden by the compartment_ocid attribute within each object.
-    default_defined_tags           = optional(map(string))  # the default defined tags. It's overriden by the defined_tags attribute within each object.
-    default_freeform_tags          = optional(map(string))  # the default freeform tags. It's overriden by the freeform_tags attribute within each object.
-    default_subnet_id              = optional(string)       # the default subnet_id. It`s overriden by the subnet_id attribute in each object.
-    default_cidr_block_allow_list  = optional(list(string)) # the default cidr block allow list. It`s overriden by the cidr_block_allow_list attribute in each object.
+    default_compartment_id        = optional(string)       # the default compartment where all resources are defined. It's overriden by the compartment_ocid attribute within each object.
+    default_defined_tags          = optional(map(string))  # the default defined tags. It's overriden by the defined_tags attribute within each object.
+    default_freeform_tags         = optional(map(string))  # the default freeform tags. It's overriden by the freeform_tags attribute within each object.
+    default_subnet_id             = optional(string)       # the default subnet_id. It`s overriden by the subnet_id attribute in each object.
+    default_cidr_block_allow_list = optional(list(string)) # the default cidr block allow list. It`s overriden by the cidr_block_allow_list attribute in each object.
+    enable_cidr_check             = optional(bool,true)    # whether provided CIDR blocks should be checked for "0.0.0.0\0".
     bastions = map(object({ 
-      bastion_type                          = optional(string,"standard") # type of bastion. Allowed value is "STANDARD".
-      compartment_id                        = optional(string)            # the compartment where the bastion is created. default_compartment_ocid is used if this is not defined.
-      subnet_id                             = optional(string)            # the subnet id where the bastion will be created. default_subnet_id is used if this is not defined.
-      defined_tags                          = optional(map(string))       # bastions defined_tags. default_defined_tags is used if this is not defined.
-      freeform_tags                         = optional(map(string))       # bastions freeform_tags. default_freeform_tags is used if this is not defined.
-      cidr_block_allow_list                 = optional(list(string))      # list of cidr blocks that will be able to connect to bastion. default_cidr_block_allow_list is used if this is not defined.
-      enable_dns_proxy                      = optional(bool,true)         # bool to enable dns_proxy on the bastion.
-      max_session_ttl_in_seconds            = optional(number)            # maximum allowd time to live for a session on the bastion.
-      name                                  = string                      # bastion name
+      bastion_type               = optional(string,"standard") # type of bastion. Allowed value is "STANDARD".
+      compartment_id             = optional(string)            # the compartment where the bastion is created. default_compartment_ocid is used if this is not defined.
+      subnet_id                  = optional(string)            # the subnet id where the bastion will be created. default_subnet_id is used if this is not defined.
+      defined_tags               = optional(map(string))       # bastions defined_tags. default_defined_tags is used if this is not defined.
+      freeform_tags              = optional(map(string))       # bastions freeform_tags. default_freeform_tags is used if this is not defined.
+      cidr_block_allow_list      = optional(list(string))      # list of cidr blocks that will be able to connect to bastion. default_cidr_block_allow_list is used if this is not defined.
+      enable_dns_proxy           = optional(bool,true)         # bool to enable dns_proxy on the bastion.
+      max_session_ttl_in_seconds = optional(number)            # maximum allowd time to live for a session on the bastion.
+      name                       = string                      # bastion name
     }))
   })
   default = null
@@ -70,7 +71,7 @@ variable "instances_dependency" {
   default = null
 }
 variable "clusters_dependency" {
-  description = "A map of objects containing the externally managed Clusters this module may depend on." 
+  description = "A map of objects containing the externally managed clusters this module may depend on." 
   type = map(any)
   default = null
 }

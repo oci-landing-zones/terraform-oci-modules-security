@@ -5,7 +5,6 @@
 This example shows how to deploy Bastions and Sessions in OCI using the [cis-bastion module](../../). It deploys one Bastion Service and one Managed SSH connection.
 This code will generate an output with the connection string that will be used to connect to target compute instance.
 
-
 For Bastions:
 - The Bastion will have standard type.
 - The Bastion will have the external DNS enabled.
