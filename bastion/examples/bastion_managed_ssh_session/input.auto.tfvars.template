@@ -37,7 +37,6 @@ sessions_configuration = {
       SESSION-1 = {
         bastion_id      = "BASTION-1"
         ssh_public_key  = "<REPLACE-BY-SSH-PUBLIC-KEY-PATH>"
-        ssh_private_key = "<REPLACE-BY-SSH-PRIVATE-KEY-PATH>"
         session_type    = "MANAGED_SSH"
         target_resource = "<REPLACE-BY-TARGET-INSTANCE-OCID>"
         target_user     = "opc"

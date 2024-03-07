@@ -33,7 +33,6 @@ variable "sessions_configuration" {
     sessions = map(object({ 
       bastion_id             = string                  # the ocid or the key of Bastion where the session will be created.
       ssh_public_key         = optional(string)        # the ssh_public_key path used by the session to connect to target. The default_ssh_public_key is used if this is not defined.
-      ssh_private_key        = optional(string)        # the ssh_private_key path used by terraform to generate the command to connect to the target resource.
       session_type           = optional(string)        # session type of the session. Supported values are MANAGED_SSH and PORT_FORWARDING. The default_session_type is used if this is not defined.
       target_resource        = string                  # Either the FQDN, OCID or IP of the target resource to connect the session to.
       target_user            = optional(string)        # User of the target that will be used by session. It is required only with MANAGED_SSH. 

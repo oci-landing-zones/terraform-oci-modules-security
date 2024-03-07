@@ -37,10 +37,9 @@ sessions_configuration = {
       SESSION-1 = {
         bastion_id      = "BASTION-1"
         ssh_public_key  = "<REPLACE-BY-SSH-PUBLIC-KEY-PATH>"
-        ssh_private_key = "<REPLACE-BY-SSH-PRIVATE-KEY-PATH>"
         session_type    = "PORT_FORWARDING"
         target_resource = "<REPLACE-BY-TARGET-RESOURCE-OCID>"
-        target_port     = "<REPLACE-BY-TARGET-PORT-OCID>"
+        target_port     = "<REPLACE-BY-TARGET-PORT>"
         session_name    = "PortForwardingByTerraform"
       }
   }
