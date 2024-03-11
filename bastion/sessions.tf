@@ -32,10 +32,10 @@ resource "oci_bastion_session" "these" {
   target_resource_details {
     session_type                               = each.value.session_type != null ? each.value.session_type : var.sessions_configuration.default_session_type #MANAGED_SSH / PORT_FORWARDING/
     target_resource_fqdn                       = length(regexall("^[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", each.value.target_resource)) > 0 ? each.value.target_resource : null
-    target_resource_id                         = length(regexall("^ocid1.*$", each.value.target_resource)) > 0 ? each.value.target_resource : var.instances_dependency != null ? var.instances_dependency[each.value.target_resource].id : null
+    target_resource_id                         = length(regexall("^ocid1.*$", each.value.target_resource)) > 0 ? each.value.target_resource : var.instances_dependency != null ? (contains(keys(var.instances_dependency),each.value.target_resource) ? var.instances_dependency[each.value.target_resource].id : null) : null
     target_resource_operating_system_user_name = each.value.target_user
     target_resource_port                       = each.value.target_port
-    target_resource_private_ip_address         = length(regexall("^(\\d+\\.){3}\\d+$", each.value.target_resource)) > 0 ? each.value.target_resource : var.clusters_dependency != null ? split(":", var.clusters_dependency[each.value.target_resource].endpoints[0].private_endpoint)[0] : null
+    target_resource_private_ip_address         = length(regexall("^(\\d+\\.){3}\\d+$", each.value.target_resource)) > 0 ? each.value.target_resource : var.endpoints_dependency != null ? (contains(keys(var.endpoints_dependency),each.value.target_resource) ? split(":", var.endpoints_dependency[each.value.target_resource].endpoints[0].private_endpoint)[0] : null) : null
   }
   display_name           = each.value.session_name
   session_ttl_in_seconds = each.value.session_ttl_in_seconds

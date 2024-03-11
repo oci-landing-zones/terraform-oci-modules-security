@@ -69,8 +69,8 @@ variable "instances_dependency" {
   type = map(any)
   default = null
 }
-variable "clusters_dependency" {
-  description = "A map of objects containing the externally managed clusters this module may depend on." 
+variable "endpoints_dependency" {
+  description = "A map of objects containing the externally managed endpoints this module may depend on." 
   type = map(any)
   default = null
 }

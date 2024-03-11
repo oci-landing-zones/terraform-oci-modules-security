@@ -128,7 +128,7 @@ Example:
 } 
 ```
 
-- **clusters_dependency**: A map of objects containing the externally managed clusters resources this module may depend on. All map objects must have the same type and should contain the following attributes:
+- **endpoints_dependency**: A map of objects containing the externally managed endpoint resources this module may depend on. All map objects must have the same type and should contain the following attributes:
   - A *private_endpoint* attribute with endpoint IP.
 
 Example:
