@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This example shows how to deploy Bastions and Sessions in OCI using the [cis-bastion module](../../). It deploys one Bastion Service and one Managed SSH connection.
+This example shows how to deploy Bastions and Sessions in OCI using the [bastion module](../../). It deploys one Bastion Service and one Managed SSH connection.
 This code will generate an output with the connection string that will be used to connect to target compute instance.
 
 For Bastions:
@@ -25,7 +25,7 @@ See [input.auto.tfvars.template](./input.auto.tfvars.template) for the variables
 2. Within *\<project-name\>.auto.tfvars*, provide tenancy connectivity information and adjust the input variables, by making the appropriate substitutions:
    - Replace \<REPLACE-BY-\*\> placeholders with appropriate values. 
    
-Refer to [cis-bastion module README.md](../../README.md) for overall attributes usage.
+Refer to [bastion module README.md](../../README.md) for overall attributes usage.
 
 3. In this folder, run the typical Terraform workflow:
 ```
