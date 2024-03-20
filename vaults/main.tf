@@ -9,8 +9,8 @@ locals {
       compartment_id = key_value.compartment_id != null ? (length(regexall("^ocid1.*$", key_value.compartment_id)) > 0 ? key_value.compartment_id : var.compartments_dependency[key_value.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id)
       name = "${key_value.name}-policy"
       description = "CIS Landing Zone policy allowing access to ${key_value.name} Key in the Vault service."
-      statements = concat(key_value.service_grantees != null ? [for sg in key_value.service_grantees : "Allow service ${sg} to use keys in compartment ${data.oci_identity_compartment.managed_keys[key_key].name} where target.key.id = '${oci_kms_key.these[key_key].id}'"] : [],
-                          key_value.group_grantees != null ? [for gg in key_value.group_grantees   : "Allow group ${gg} to use key-delegate in compartment ${data.oci_identity_compartment.managed_keys[key_key].name} where target.key.id = '${oci_kms_key.these[key_key].id}'"] : [])
+      statements = concat(key_value.service_grantees != null ? [for sg in key_value.service_grantees : "Allow service ${sg} to use keys in compartment id ${data.oci_identity_compartment.managed_keys[key_key].id} where target.key.id = '${oci_kms_key.these[key_key].id}'"] : [],
+                          key_value.group_grantees != null ? [for gg in key_value.group_grantees   : "Allow group ${gg} to use key-delegate in compartment id ${data.oci_identity_compartment.managed_keys[key_key].id} where target.key.id = '${oci_kms_key.these[key_key].id}'"] : [])
       defined_tags = key_value.defined_tags != null ? key_value.defined_tags : var.vaults_configuration.default_defined_tags
       freeform_tags = merge(local.cislz_module_tag, key_value.freeform_tags != null ? key_value.freeform_tags : key_value.freeform_tags != null ? key_value.freeform_tags : var.vaults_configuration.default_freeform_tags)                    
     }
@@ -118,8 +118,8 @@ resource "oci_identity_policy" "existing_keys" {
     description    = "CIS Landing Zone policy allowing access to keys in the Vault service."
     compartment_id = length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id
     statements     = concat(
-      each.value.service_grantees != null ? [for sg in each.value.service_grantees : "Allow service ${sg} to use keys in compartment ${data.oci_identity_compartment.existing_keys[each.key].name} where target.key.id = '${length(regexall("^ocid1.*$", each.value.key_id)) > 0 ? each.value.key_id : var.vaults_dependency[each.value.key_id].id}'"] : [],
-      each.value.group_grantees != null ? [for gg in each.value.group_grantees   : "Allow group ${gg} to use key-delegate in compartment ${data.oci_identity_compartment.existing_keys[each.key].name} where target.key.id = '${length(regexall("^ocid1.*$", each.value.key_id)) > 0 ? each.value.key_id : var.vaults_dependency[each.value.key_id].id}'"] : [])
+      each.value.service_grantees != null ? [for sg in each.value.service_grantees : "Allow service ${sg} to use keys in compartment id ${data.oci_identity_compartment.existing_keys[each.key].id} where target.key.id = '${length(regexall("^ocid1.*$", each.value.key_id)) > 0 ? each.value.key_id : var.vaults_dependency[each.value.key_id].id}'"] : [],
+      each.value.group_grantees != null ? [for gg in each.value.group_grantees   : "Allow group ${gg} to use key-delegate in compartment id ${data.oci_identity_compartment.existing_keys[each.key].id} where target.key.id = '${length(regexall("^ocid1.*$", each.value.key_id)) > 0 ? each.value.key_id : var.vaults_dependency[each.value.key_id].id}'"] : [])
     defined_tags   = var.vaults_configuration.default_defined_tags
     freeform_tags  = merge(local.cislz_module_tag, var.vaults_configuration.default_freeform_tags)
 }
