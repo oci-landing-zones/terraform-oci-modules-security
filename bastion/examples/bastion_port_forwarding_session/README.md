@@ -1,4 +1,4 @@
-# Bastion with Port Forwarding Sessions Example 
+# Bastion with Port Forwarding Session Example 
 
 ## Introduction
 
