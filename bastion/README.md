@@ -37,8 +37,8 @@ Allow group <GROUP-NAME> to read instance-agent-plugins in compartment <TARGET-I
 
 For more information about Bastion policies [click here](https://docs.oracle.com/en-us/iaas/Content/Bastion/Tasks/managingbastions.htm).
 
-### Terraform Version > 1.3.x
-This module relies on [Terraform Optional Object Type Attributes feature](https://developer.hashicorp.com/terraform/language/expressions/type-constraints#optional-object-type-attributes), which has been promoted and no longer experimental in versions greater than 1.3.x. The feature shortens the amount of input values in complex object types, by having Terraform automatically inserting a default value for any missing optional attributes.
+### Terraform Version >= 1.3.0
+This module relies on [Terraform Optional Object Type Attributes feature](https://developer.hashicorp.com/terraform/language/expressions/type-constraints#optional-object-type-attributes), which has been promoted and no longer experimental in versions greater than or equal to 1.3.0. The feature shortens the amount of input values in complex object types, by having Terraform automatically inserting a default value for any missing optional attributes.
 
 ## <a name="functioning">Module Functioning</a>
 The module defines two top level attributes used to manage bastions and sessions: 
