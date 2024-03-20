@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This example shows how to deploy Vulnerability Scanning resources in OCI using the [VSS module](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/tree/main/vss). It is functionally equivalent to [Vision example](../vision/), but it obtains its dependencies from OCI Object Storage objects, specified in *oci_compartments_dependency* and *oci_vaults_dependency* variables settings. 
+This example shows how to deploy Vulnerability Scanning resources in OCI using the [VSS module](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/tree/main/vss). It is functionally equivalent to [Vision example](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/tree/main/vss/examples/vision), but it obtains its dependencies from OCI Object Storage objects, specified in *oci_compartments_dependency* and *oci_vaults_dependency* variables settings. 
 
 It defines a host recipe (*VISION-HOST-RECIPE*), a host target (*VISION-HOST-TARGET*), a container recipe (*VISION-CONTAINER-RECIPE*) and a container target (*VISION-CONTAINER-TARGET*), all created in the same compartment defined by *default_compartment_ocid*. The example uses module defaults and only defines the minimum required attributes. *VISION-HOST-RECIPE* recipe is used by *VISION-HOST-TARGET* target, while *VISION-CONTAINER-RECIPE* recipe is used by *VISION-CONTAINER-TARGET* target.
 

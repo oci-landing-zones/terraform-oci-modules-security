@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This example shows how to deploy Cloud Guard targets in OCI using the [Cloud Guard module](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/tree/main/cloud-guard/). It is functionally equivalent to [Vision example](../vision/), but it obtains its dependencies from OCI Object Storage object. 
+This example shows how to deploy Cloud Guard targets in OCI using the [Cloud Guard module](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/tree/main/cloud-guard/). It is functionally equivalent to [Vision example](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/tree/main/cloud-guard/examples/vision), but it obtains its dependencies from OCI Object Storage object. 
 
 The module enables Cloud Guard service (if not already enabled), setting Ashburn as the reporting region, and defines two targets. Both targets monitor compartments under *resource_ocid* compartment and are created in *resource_ocid* compartment. First target (*CLOUD-GUARD-TARGET-1*) uses Oracle provided recipes while the second one (*CLOUD-GUARD-TARGET-2*) uses cloned recipes.
 
