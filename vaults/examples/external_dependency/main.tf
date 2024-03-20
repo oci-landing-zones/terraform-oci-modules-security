@@ -21,7 +21,7 @@ data "oci_objectstorage_object" "vaults" {
 }
 
 module "vision_vaults" {
-  source               = "../../"
+  source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/vaults"
   providers = {
     oci = oci
     oci.home = oci.home

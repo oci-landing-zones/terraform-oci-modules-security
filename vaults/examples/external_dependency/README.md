@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This example shows how to deploy Vaults and Keys in OCI using the [Vaults module](../..). It is functionally equivalent to [Vision example](../vision/), but it obtains its dependencies from OCI Object Storage objects, specified in *oci_compartments_dependency* and *oci_vaults_dependency* variables settings. 
+This example shows how to deploy Vaults and Keys in OCI using the [Vaults module](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/tree/main/vaults). It is functionally equivalent to [Vision example](../vision/), but it obtains its dependencies from OCI Object Storage objects, specified in *oci_compartments_dependency* and *oci_vaults_dependency* variables settings. 
 
 It defines a vault and two keys.
 - The vault (*VISION-VAULT*) is created in a shared HSM partition (per module default value). 
