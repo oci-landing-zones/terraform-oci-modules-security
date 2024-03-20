@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This example shows how to deploy Vulnerability Scanning resources in OCI using the [VSS module](../..).
+This example shows how to deploy Vulnerability Scanning resources in OCI using the [VSS module](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/tree/main/vss).
 
 It defines a host recipe (*VISION-HOST-RECIPE*), a host target (*VISION-HOST-TARGET*), a container recipe (*VISION-CONTAINER-RECIPE*) and a container target (*VISION-CONTAINER-TARGET*), all created in the same compartment defined by *default_compartment_ocid*. The example uses module defaults and only defines the minimum required attributes.
 
