@@ -1,4 +1,4 @@
-# # January 08, 2024 Release Notes - 0.1.2
+# January 08, 2024 Release Notes - 0.1.2
 
 ## Updates
 ### All Modules
