@@ -4,7 +4,7 @@
 
 This module manages bastions and bastion sessions in Oracle Cloud Infrastructure (OCI). OCI Bastion service provides restricted and time-limited access to target resources that do not have public endpoints. Bastions let authorized users connect from specific IP addresses to target resources using Secure Shell (SSH) sessions. When connected, users can interact with the target resource by using any software or protocol supported by SSH.
 
-Teh module outputs the SSH command to run for any managed sessions.
+The module outputs the SSH command to run for any managed sessions.
 
 Check [module specification](./SPEC.md) for a full description of module requirements, supported variables, managed resources and outputs.
 
