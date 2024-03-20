@@ -1,21 +1,20 @@
-# CIS Bastion and Managed SSH Example 
+# Bastion with Managed SSH Session Example 
 
 ## Introduction
 
-This example shows how to deploy Bastions and Sessions in OCI using the [bastion module](../../). It deploys one Bastion Service and one Managed SSH connection.
-This code will generate an output with the connection string that will be used to connect to target compute instance.
+This example shows how to deploy bastions and sessions in OCI using the [Bastion module](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/tree/main/bastion). It deploys one bastion and one managed SSH session. It outputs the connection string that is used to connect to target Compute instance.
 
-For Bastions:
-- The Bastion will have standard type.
-- The Bastion will have the external DNS enabled.
-- The Bastion will have the maximum time to live session to 3h.
+The following resources are created:
 
-For Sessions:
-- The session type will be MANAGED_SSH.
-- The session time to live is set to 3h.
-- The session target_port is set on 22.
-- The session target_user is set to opc.
-- The session will be created on the BASTION-1.
+One bastion:
+- of type "standard".
+- maximum time to live sessions of three hours.
+
+One managed SSH session:
+- time to live of three hours.
+- target Compute instance of choice.
+- target_port set to 22.
+- target_user set to "opc".
 
 See [input.auto.tfvars.template](./input.auto.tfvars.template) for the variables configuration.
 

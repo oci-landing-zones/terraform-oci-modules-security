@@ -1,20 +1,18 @@
-# CIS Bastion and Port Forwarding Example 
+# Bastion with Port Forwarding Sessions Example 
 
 ## Introduction
 
-This example shows how to deploy Bastions and Sessions in OCI using the [bastion module](../../). It deploys one Bastion Service and one port forwarding session.
-This code will generate an output with the connection string that will be used to connect to target resource.
+This example shows how to deploy bastions and sessions in OCI using the [Bastion module](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/tree/main/bastion). It deploys one bastion and one port forwarding session. It outputs the connection string used to connect to target resource endpoint.
 
+The following resources are created:
 
-For Bastions:
-- The Bastion will have standard type.
-- The Bastion will have the external DNS enabled.
-- The Bastion will have the maximum time to live session to 3h.
+One bastion:
+- of type "standard".
+- maximum time to live sessions of three hours.
 
-For Sessions:
-- The session type will be PORT_FORWARDING.
-- The session time to live is set to 3h.
-- The session will be created on the BASTION-1.
+One port forwarding session:
+- time to live of three hours.
+- target resource endpoint of choice.
 
 See [input.auto.tfvars.template](./input.auto.tfvars.template) for the variables configuration.
 
