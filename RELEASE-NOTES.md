@@ -1,4 +1,13 @@
-# # January 08, 2024 Release Notes - 0.1.2
+# March 20, 2024 Release Notes - 0.1.3
+
+## New
+1. [Bastion module](./bastion/), with support for managed SSH and port forwarding sessions.
+
+## Updates
+1. Examples code in all modules updated with remote source references.
+2. Examples documentation in all modules updated with remote link references.
+
+# January 08, 2024 Release Notes - 0.1.2
 
 ## Updates
 ### All Modules
