@@ -1,4 +1,4 @@
-# CIS OCI Vulnerability Scanning Module Example
+# OCI Vulnerability Scanning Module Example
 
 ## Introduction
 
