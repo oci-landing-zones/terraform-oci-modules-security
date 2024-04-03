@@ -1,4 +1,4 @@
-# CIS OCI Landing Zone Vulnerability Scanning Module
+# OCI Landing Zone Vulnerability Scanning Module
 
 ![Landing Zone logo](../landing_zone_300.png)
 
