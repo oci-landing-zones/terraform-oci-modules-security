@@ -29,9 +29,7 @@ region               = "<your tenancy region>"      # This is your region, where
 #---------------------------------------
 
 cloud_guard_configuration = {
-  tenancy_ocid = "<REPLACE-BY-TENANCY-OCID>"
-  enable = true
-  reporting_region = "<REPLACE-BY-REPORTING-REGION-NAME>" # example: "us-ashburn-1"
+  reporting_region = "<REPLACE-BY-REPORTING-REGION-NAME>" # example: "us-ashburn-1". It defaults to tenancy home region if not provided.
   
   targets = {
     CLOUD-GUARD-TARGET-1 = {

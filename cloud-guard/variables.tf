@@ -4,10 +4,9 @@
 variable "cloud_guard_configuration" {
   description = "Cloud Guard settings, for managing Cloud Guard resources in OCI. Please see the comments within each attribute for details."
   type = object({
-    tenancy_ocid = string # the tenancy OCID.
     default_defined_tags = optional(map(string)) # the default defined tags that are applied to all resources managed by this module. Overriden by defined_tags attribute in each resource. 
     default_freeform_tags = optional(map(string)) # the default freeform tags that are applied to all resources managed by this module. Overriden by freeform_tags attribute in each resource. 
-    reporting_region = optional(string) # the reporting region. Required when enable=true.
+    reporting_region = optional(string) # the reporting region. It defaults to tenancy home region if undefined.
     self_manage_resources = optional(bool) # whether Oracle managed resources are created by customers. Default: false.
     cloned_recipes_prefix = optional(string) # a prefix to add to cloned recipes. Default: "oracle-cloned-".
     
@@ -24,6 +23,11 @@ variable "cloud_guard_configuration" {
   default = null
 }
 
+variable "tenancy_ocid" {
+  description = "The tenancy OCID."
+  type = string
+}
+
 variable enable_output {
   description = "Whether Terraform should enable module output."
   type = bool
@@ -38,7 +42,9 @@ variable module_name {
 
 variable compartments_dependency {
   description = "A map of objects containing the externally managed compartments this module may depend on. All map objects must have the same type and must contain at least an 'id' attribute (representing the compartment OCID) of string type." 
-  type = map(any)
+  type = map(object({
+    id = string
+  }))
   default = null
 }
 

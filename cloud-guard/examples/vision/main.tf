@@ -4,5 +4,6 @@
 module "vision_cloud_guard" {
   source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/cloud-guard"
   cloud_guard_configuration = var.cloud_guard_configuration
+  tenancy_ocid = var.tenancy_ocid
   enable_output = true
 }
