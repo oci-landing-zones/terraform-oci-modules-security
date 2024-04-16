@@ -15,6 +15,7 @@ data "oci_objectstorage_object" "compartments" {
 
 module "vision_cloud_guard" {
   source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/cloud-guard"
+  tenancy_ocid = var.tenancy_ocid
   cloud_guard_configuration = var.cloud_guard_configuration
   enable_output = true
   compartments_dependency = var.oci_compartments_dependency != null ? jsondecode(data.oci_objectstorage_object.compartments[0].content) : null
