@@ -108,7 +108,7 @@ locals {
     for cmp_id in local.target_host_scan_cmps : [
       for i in data.oci_core_instances.these[cmp_id].instances : [
         #{"name" : i.display_name, "ocid" : i.id, "plugin_name" : data.oci_computeinstanceagent_instance_agent_plugins.these[i.id].name, "plugin_enabled" : i.agent_config[0].plugins_config[0].desired_state == "ENABLED" ? true : false, "plugin_status" : data.oci_computeinstanceagent_instance_agent_plugins.these[i.id].status, "plugin_message" : data.oci_computeinstanceagent_instance_agent_plugins.these[i.id].message} :
-        {"name" : i.display_name, "ocid" : i.id, "plugin_enabled" : (i.agent_config[0].plugins_config[0].desired_state == "ENABLED" ? true : false), "reminder" : "VSS requires the plugin ENABLED and RUNNING."}
+        {"instance_name" : i.display_name, "instance_ocid" : i.id, "instance_state": i.state, "is_cloud_agent_plugin_enabled" : (length(i.agent_config[0].plugins_config) > 0 ? (i.agent_config[0].plugins_config[0].desired_state == "ENABLED" ? true : false) : false), "reminder" : "Make sure the Vulnerability Scanning plugin is ENABLED and RUNNING."}
       ]
     ]
   ])

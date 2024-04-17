@@ -119,13 +119,14 @@ cloud_guard_configuration = {
 ```
 ### <a name="ext_dep">External Dependencies</a>
 
-The example above has some dependencies. Specifically, it requires *tenancy_ocid* and *resource_id* values. These values need to be obtained somehow. In some cases, you can simply get them from the team that is managing compartments and operate on a manual copy-and-paste fashion. However, in the automation world, copying and pasting can be slow and error prone. More sophisticated automation approaches would get these dependencies from their producing Terraform configurations. With this scenario in mind, **the module overloads the attributes ending in *_id***. Note *tenancy_ocid* is immutable in the tenancy lifetime, hence the module expects that the literal tenancy OCID is used. The *\*_id* attributes can be assigned a literal OCID (as in the example above, for those whom copying and pasting is an acceptable approach) or a reference (a key) to an OCID. If a key to an OCID is given, the module requires a map of objects where the key and the OCID are expected to be found. This map of objects is passed to the module via the *compartments_dependency* attribute. 
+The example above has some dependencies. Specifically, it requires *tenancy_ocid* and *resource_id* values. These values need to be obtained somehow. In some cases, you can simply get them from the team that is managing compartments and operate on a manual copy-and-paste fashion. However, in the automation world, copying and pasting can be slow and error prone. More sophisticated automation approaches would get these dependencies from their producing Terraform configurations. With this scenario in mind, **the module overloads the attributes ending in *_id***. The *\*_id* attributes can be assigned a literal OCID (as in the example above, for those whom copying and pasting is an acceptable approach) or a reference (a key) to an OCID. If a key to an OCID is given, the module requires a map of objects where the key and the OCID are expected to be found. This map of objects is passed to the module via the *compartments_dependency* variable. 
+
+**Note**: The special key "TENANCY-ROOT" is reserved and should be used for referring to the tenancy OCID in *resource_id* and *compartment_id* attributes.
 
 Rewriting the example above with the external dependency:
 
 ```
 cloud_guard_configuration = {
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaa...nuq"
   reporting_region = "us-ashburn-1"
   
   targets = {

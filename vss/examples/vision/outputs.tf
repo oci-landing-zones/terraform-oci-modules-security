@@ -8,3 +8,7 @@ output "host_recipes" {
 output "host_targets" {
   value = module.vision_scanning.scanning_host_targets
 }
+
+output "host_scanning_plugin_state" {
+  value = module.vision_scanning.host_scanning_plugin_state
+}
