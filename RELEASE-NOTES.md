@@ -1,3 +1,9 @@
+# April 16, 2024 Release Notes - 0.1.4
+
+## Updates
+1. [Cloud Guard module](./cloud-guard/): ability to use "TENANCY-ROOT" key for referring to tenancy OCID in *cloud_guard_configuration*. *tenancy_ocid* becomes a variable of its own.
+2. All modules: all dependency variables are now strongly typed, enhancing usage guidance.
+
 # March 20, 2024 Release Notes - 0.1.3
 
 ## New
