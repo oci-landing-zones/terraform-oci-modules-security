@@ -2,8 +2,8 @@
 
 ## Updates
 1. [Security Zones module](./security-zones/)
-    - *tenancy_ocid* attribute becomes a variable of its own.
-    - *reporting_region* attribute defaults to tenancy home region if not defined.
+    - *tenancy_ocid* attribute, once required in the *security_zones_configuration*, becomes a variable of its own.
+    - *reporting_region* attribute of *security_zones_configuration* defaults to tenancy home region if not defined.
 
 ## Fixes
 1. [VSS module](./vss/)
