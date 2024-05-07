@@ -4,10 +4,9 @@
 #--------------------------------------------------------------------------------------------------------------------------------------
 # 1. Rename this file to <project-name>.auto.tfvars, where <project-name> is a name of your choice.
 # 2. Provide values for "Tenancy Connectivity Variables".
-# 3. Replace <REPLACE-BY-TENANCY-OCID> placeholder by the appropriate compartment OCID. 
-# 4. Replace <REPLACE-BY-REPORTING-REGION-NAME> placeholder by the reporting region name. Example: "us-ashburn-1".
-# 5. Replace <REPLACE-BY-SECURITY-ZONE-COMPARTMENT-OCID> placeholder by the appropriate compartment OCID. 
-# 6. Replace <REPLACE-BY-SECURITY-ZONE-RECIPE-COMPARTMENT-OCID> placeholders by the appropriate compartment OCIDs. 
+# 3. Replace <REPLACE-BY-REPORTING-REGION-NAME> placeholder by the reporting region name. Example: "us-ashburn-1".
+# 4. Replace <REPLACE-BY-SECURITY-ZONE-COMPARTMENT-OCID> placeholder by the appropriate compartment OCID. 
+# 5. Replace <REPLACE-BY-SECURITY-ZONE-RECIPE-COMPARTMENT-OCID> placeholders by the appropriate compartment OCIDs. 
 #--------------------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------
@@ -26,8 +25,7 @@ region               = "<your tenancy region>"      # This is your region, where
 #---------------------------------------
 
 security_zones_configuration = {
-  tenancy_ocid     = "<REPLACE-BY-TENANCY-OCID>"
-  reporting_region = "<REPLACE-BY-REPORTING-REGION-NAME>"
+  reporting_region = "<REPLACE-BY-REPORTING-REGION-NAME>" # It defaults to tenancy home region if undefined.
   
   security_zones = {
     SECURITY-ZONE = {

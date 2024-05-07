@@ -4,14 +4,13 @@
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 # 1. Rename this file to <project-name>.auto.tfvars, where <project-name> is a name of your choice.
 # 2. Provide values for "Tenancy Connectivity Variables".
-# 3. Replace <REPLACE-BY-TENANCY-OCID> placeholder by the appropriate compartment OCID. 
-# 4. Replace <REPLACE-BY-REPORTING-REGION-NAME> placeholder by the reporting region name. Example: "us-ashburn-1".
-# 5. Replace <REPLACE-BY-SECURITY-ZONE-COMPARTMENT-REFERENCE> placeholder by the appropriate security zone compartment reference, 
+# 3. Replace <REPLACE-BY-REPORTING-REGION-NAME> placeholder by the reporting region name. Example: "us-ashburn-1".
+# 4. Replace <REPLACE-BY-SECURITY-ZONE-COMPARTMENT-REFERENCE> placeholder by the appropriate security zone compartment reference, 
 #    expected to be found in the OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME>.
-# 6. Replace <REPLACE-BY-SECURITY-ZONE-RECIPE-COMPARTMENT-REFERENCE> placeholders by the appropriate security zone recipe compartment references, 
+# 5. Replace <REPLACE-BY-SECURITY-ZONE-RECIPE-COMPARTMENT-REFERENCE> placeholders by the appropriate security zone recipe compartment references, 
 #    expected to be found in the OCI Object Storage object referred by <REPLACE-BY-OBJECT-NAME>.
-# 7. Replace <REPLACE-BY-BUCKET-NAME> placeholder by the OCI Object Storage bucket that contains the object referred by <REPLACE-BY-OBJECT-NAME>.
-# 8. Replace <REPLACE-BY-OBJECT-NAME> placeholder by the OCI Object Storage object that has the compartment references. This object is supposedly 
+# 6. Replace <REPLACE-BY-BUCKET-NAME> placeholder by the OCI Object Storage bucket that contains the object referred by <REPLACE-BY-OBJECT-NAME>.
+# 7. Replace <REPLACE-BY-OBJECT-NAME> placeholder by the OCI Object Storage object that has the compartment references. This object is supposedly 
 #    stored in OCI Object Storage by the module that manages compartments.
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -31,8 +30,7 @@ region               = "<your tenancy region>"      # This is your region, where
 #---------------------------------------
 
 security_zones_configuration = {
-  tenancy_ocid     = "<REPLACE-BY-TENANCY-OCID>"
-  reporting_region = "<REPLACE-BY-REPORTING-REGION-NAME>"
+  reporting_region = "<REPLACE-BY-REPORTING-REGION-NAME>" # It defaults to tenancy home region if undefined.
   
   security_zones = {
     SECURITY-ZONE = {
