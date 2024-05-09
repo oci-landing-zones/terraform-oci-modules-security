@@ -37,8 +37,27 @@ Allow group <GROUP-NAME> to read instance-agent-plugins in compartment <TARGET-I
 
 For more information about Bastion policies [click here](https://docs.oracle.com/en-us/iaas/Content/Bastion/Tasks/managingbastions.htm).
 
-### Terraform Version >= 1.3.0
-This module relies on [Terraform Optional Object Type Attributes feature](https://developer.hashicorp.com/terraform/language/expressions/type-constraints#optional-object-type-attributes), which has been promoted and no longer experimental in versions greater than or equal to 1.3.0. The feature shortens the amount of input values in complex object types, by having Terraform automatically inserting a default value for any missing optional attributes.
+### Terraform Version < 1.3.x and Optional Object Type Attributes
+This module relies on [Terraform Optional Object Type Attributes feature](https://developer.hashicorp.com/terraform/language/expressions/type-constraints#optional-object-type-attributes), which is experimental from Terraform 0.14.x to 1.2.x. It shortens the amount of input values in complex object types, by having Terraform automatically inserting a default value for any missing optional attributes. The feature has been promoted and it is no longer experimental in Terraform 1.3.x.
+
+**As is, this module can only be used with Terraform versions up to 1.2.x**, because it can be consumed by other modules via [OCI Resource Manager service](https://docs.oracle.com/en-us/iaas/Content/ResourceManager/home.htm), that still does not support Terraform 1.3.x.
+
+Upon running *terraform plan* with Terraform versions prior to 1.3.x, Terraform displays the following warning:
+```
+Warning: Experimental feature "module_variable_optional_attrs" is active
+```
+
+Note the warning is harmless. The code has been tested with Terraform 1.3.x and the implementation is fully compatible.
+
+If you really want to use Terraform 1.3.x, in [providers.tf](./providers.tf):
+1. Change the terraform version requirement to:
+```
+required_version = ">= 1.3.0"
+```
+2. Remove the line:
+```
+experiments = [module_variable_optional_attrs]
+```
 
 ## <a name="functioning">Module Functioning</a>
 The module defines two top level attributes used to manage bastions and sessions: 

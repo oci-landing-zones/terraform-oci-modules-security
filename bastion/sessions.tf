@@ -38,5 +38,5 @@ resource "oci_bastion_session" "these" {
     target_resource_private_ip_address         = length(regexall("^(\\d+\\.){3}\\d+$", each.value.target_resource)) > 0 ? each.value.target_resource : var.endpoints_dependency != null ? (contains(keys(var.endpoints_dependency),each.value.target_resource) ? var.endpoints_dependency[each.value.target_resource].ip_address : null) : null
   }
   display_name           = each.value.session_name
-  session_ttl_in_seconds = each.value.session_ttl_in_seconds
+  session_ttl_in_seconds = coalesce(each.value.session_ttl_in_seconds,10800)
 }

@@ -9,15 +9,15 @@ variable "bastions_configuration" {
     default_freeform_tags         = optional(map(string))  # the default freeform tags. It's overriden by the freeform_tags attribute within each object.
     default_subnet_id             = optional(string)       # the default subnet_id. It`s overriden by the subnet_id attribute in each object.
     default_cidr_block_allow_list = optional(list(string)) # the default cidr block allow list. It`s overriden by the cidr_block_allow_list attribute in each object.
-    enable_cidr_check             = optional(bool,true)    # whether provided CIDR blocks should be checked for "0.0.0.0\0".
+    enable_cidr_check             = optional(bool)         # whether provided CIDR blocks should be checked for "0.0.0.0\0".
     bastions = map(object({ 
-      bastion_type               = optional(string,"standard") # type of bastion. Allowed value is "STANDARD".
+      bastion_type               = optional(string)            # type of bastion. Allowed value is "STANDARD".
       compartment_id             = optional(string)            # the compartment where the bastion is created. default_compartment_ocid is used if this is not defined.
       subnet_id                  = optional(string)            # the subnet id where the bastion will be created. default_subnet_id is used if this is not defined.
       defined_tags               = optional(map(string))       # bastions defined_tags. default_defined_tags is used if this is not defined.
       freeform_tags              = optional(map(string))       # bastions freeform_tags. default_freeform_tags is used if this is not defined.
       cidr_block_allow_list      = optional(list(string))      # list of cidr blocks that will be able to connect to bastion. default_cidr_block_allow_list is used if this is not defined.
-      enable_dns_proxy           = optional(bool,true)         # bool to enable dns_proxy on the bastion.
+      enable_dns_proxy           = optional(bool)              # bool to enable dns_proxy on the bastion.
       max_session_ttl_in_seconds = optional(number)            # maximum allowd time to live for a session on the bastion.
       name                       = string                      # bastion name
     }))
@@ -37,7 +37,7 @@ variable "sessions_configuration" {
       target_resource        = string                  # Either the FQDN, OCID or IP of the target resource to connect the session to.
       target_user            = optional(string)        # User of the target that will be used by session. It is required only with MANAGED_SSH. 
       target_port            = number                  # Port number that will be used by the session.
-      session_ttl_in_seconds = optional(number,10800)  # Session time to live
+      session_ttl_in_seconds = optional(number)        # Session time to live
       session_name           = string                  # Session name
     }))
   })
