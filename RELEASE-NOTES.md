@@ -1,4 +1,4 @@
-# May 08, 2024 Release Notes - 0.1.5
+# May 10, 2024 Release Notes - 0.1.5
 
 ## Updates
 1. [Security Zones module](./security-zones/)
@@ -7,7 +7,7 @@
 
 ## Fixes
 1. [VSS module](./vss/)
-    - dynamic runtime dependency issue in *local.target_host_scan_cmps*. [Issue 541](https://orahub.oci.oraclecorp.com/nace-shared-services/cis-oci-landing-zone/-/issues/541).
+    - dynamic runtime dependency issue in *local.target_host_scan_cmps*. It closes [issue 541](https://orahub.oci.oraclecorp.com/nace-shared-services/cis-oci-landing-zone/-/issues/541).
 
 
 # April 16, 2024 Release Notes - 0.1.4
