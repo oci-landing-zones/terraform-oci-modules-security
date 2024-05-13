@@ -39,6 +39,11 @@ variable "vaults_configuration" {
       service_grantees = optional(list(string)) # the OCI service names allowed to use the key.
       group_grantees = optional(list(string)) # the IAM group names allowed to use the key-delegate.
     })))
+
+    vault_replica = optional(map(object({
+      vault_id       = optional(string) # the ocid of existing vault, note that only VPV can do a replication
+      replica_region = string # the region to replicate
+    })))
   })
   default = null
 }
