@@ -46,4 +46,10 @@ vaults_configuration = {
       group_grantees = ["vision-appdev-admin-group"]
     }
   }
+  vault_replica = {
+    VISION-VAULT-REPLICA = {
+      vault_id = "example-ocid-of-vpv-vault" # Only VPV vault can enable replication
+      replica_region = "example-replica-region"
+    }
+  }
 }

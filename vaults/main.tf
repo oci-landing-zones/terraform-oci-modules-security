@@ -126,6 +126,6 @@ resource "oci_identity_policy" "existing_keys" {
 
 resource "oci_kms_vault_replication" "these" {
   for_each = var.vaults_configuration != null ? var.vaults_configuration.vault_replica : {}
-    vault_id = oci_kms_vault.these[each.value.vault_id].id
+    vault_id = each.value.vault_id != null ? length(regexall("^ocid.*$", each.value.vault_id)) > 0 ? each.value.vault_id : var.vaults_dependency[each.value.vault_id].id : oci_kms_vault.these[each.value.vault_id].id
     replica_region = each.value.replica_region
 }

@@ -41,7 +41,7 @@ variable "vaults_configuration" {
     })))
 
     vault_replica = optional(map(object({
-      vault_id       = optional(string) # the ocid of existing vault, note that only VPV can do a replication
+      vault_id       = string # the ocid of existing vault, note that only VPV can do a replication
       replica_region = string # the region to replicate
     })))
   })
@@ -60,6 +60,7 @@ variable vaults_dependency {
   description = "A map of objects containing the externally managed vaults this module may depend on. All map objects must have the same type and must contain at least a 'management_endpoint' attribute (representing the management endpoint URL) of string type." 
   type = map(object({
     management_endpoint = string # the vault management endpoint URL.
+    id                  = string # the ocid of vault
   }))
   default = null
 }
