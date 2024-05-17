@@ -15,6 +15,7 @@ variable "vaults_configuration" {
       type = optional(string) # vault type. Default is "DEFAULT", a regular virtual vault, in shared HSM partition. For an isolated partition, use "VIRTUAL_PRIVATE".
       defined_tags = optional(map(string)) # vault defined_tags. default_defined_tags is used if undefined.
       freeform_tags = optional(map(string)) # vault freeform_tags. default_freeform_tags is used if undefined.
+      replica_region = optional(string) # only available if the vault is a VPV (virtual private vault) and you want to replicate it to another region
     })))
 
     keys = optional(map(object({
@@ -39,11 +40,6 @@ variable "vaults_configuration" {
       service_grantees = optional(list(string)) # the OCI service names allowed to use the key.
       group_grantees = optional(list(string)) # the IAM group names allowed to use the key-delegate.
     })))
-
-    vault_replicas = optional(map(object({
-      vault_id       = string # the ocid of existing vault, note that only VPV can do a replication
-      replica_region = string # the region to replicate
-    })))
   })
   default = null
 }
@@ -60,7 +56,6 @@ variable vaults_dependency {
   description = "A map of objects containing the externally managed vaults this module may depend on. All map objects must have the same type and must contain at least a 'management_endpoint' attribute (representing the management endpoint URL) of string type." 
   type = map(object({
     management_endpoint = string # the vault management endpoint URL.
-    id                  = string # the ocid of vault
   }))
   default = null
 }
