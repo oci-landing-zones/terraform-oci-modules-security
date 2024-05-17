@@ -40,7 +40,7 @@ variable "vaults_configuration" {
       group_grantees = optional(list(string)) # the IAM group names allowed to use the key-delegate.
     })))
 
-    vault_replica = optional(map(object({
+    vault_replicas = optional(map(object({
       vault_id       = string # the ocid of existing vault, note that only VPV can do a replication
       replica_region = string # the region to replicate
     })))

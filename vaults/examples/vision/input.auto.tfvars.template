@@ -46,10 +46,11 @@ vaults_configuration = {
       group_grantees = ["vision-appdev-admin-group"]
     }
   }
-  vault_replica = {
-    VISION-VAULT-REPLICA = {
-      vault_id = "example-ocid-of-vpv-vault" # Only VPV vault can enable replication
-      replica_region = "example-replica-region"
-    }
-  }
+### Uncomment if your vault is a VPV (virtual private vault) and you want to replicate it to another region.
+# vault_replicas = {
+#    VISION-VAULT-REPLICA = {
+#      vault_id = "VISION-VAULT" # Only VPV vault can enable replication
+#      replica_region = "<REPLACE-BY-REGION-NAME-TO-REPLICATE-VAULT>" # for instance "us-phoenix-1", "us-ashburn-1"
+#    }
+#  }
 }
