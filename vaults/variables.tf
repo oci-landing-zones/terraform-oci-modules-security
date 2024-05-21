@@ -15,6 +15,7 @@ variable "vaults_configuration" {
       type = optional(string) # vault type. Default is "DEFAULT", a regular virtual vault, in shared HSM partition. For an isolated partition, use "VIRTUAL_PRIVATE".
       defined_tags = optional(map(string)) # vault defined_tags. default_defined_tags is used if undefined.
       freeform_tags = optional(map(string)) # vault freeform_tags. default_freeform_tags is used if undefined.
+      replica_region = optional(string) # only available if the vault is a VPV (virtual private vault) and you want to replicate it to another region
     })))
 
     keys = optional(map(object({

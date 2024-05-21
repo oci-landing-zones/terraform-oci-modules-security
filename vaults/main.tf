@@ -123,3 +123,11 @@ resource "oci_identity_policy" "existing_keys" {
     defined_tags   = var.vaults_configuration.default_defined_tags
     freeform_tags  = merge(local.cislz_module_tag, var.vaults_configuration.default_freeform_tags)
 }
+
+resource "oci_kms_vault_replication" "these" {
+  for_each = { for k, v in var.vaults_configuration != null ? var.vaults_configuration.vaults : {} : k => v
+    if v.replica_region != null
+  }
+  vault_id = oci_kms_vault.these[each.key].id
+  replica_region = each.value.replica_region
+}
