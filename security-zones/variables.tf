@@ -4,7 +4,6 @@
 variable "security_zones_configuration" {
   description = "Security Zones configuration."
   type = object({
-    tenancy_ocid = string # The tenancy OCID
     default_cis_level = optional(string) # The default CIS level for all recipes with an unspecified cis_level. Valid values: "1" and "2". Default: "1"
     default_security_policies_ocids = optional(list(string)) # The list of default Security Zone policies OCIDs for all recipes with an unspecified security_policies_ocids. These are merged with CIS Security Zone policies driven off cis_level.
     default_defined_tags = optional(map(string))
@@ -32,6 +31,11 @@ variable "security_zones_configuration" {
     })) 
   })
   default = null
+}
+
+variable "tenancy_ocid" {
+  description = "The tenancy OCID."
+  type = string
 }
 
 variable compartments_dependency {
