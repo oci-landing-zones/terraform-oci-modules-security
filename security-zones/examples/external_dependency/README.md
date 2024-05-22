@@ -18,7 +18,6 @@ allow group <group> to read objects in compartment <bucket-compartment-name> whe
 1. Rename *input.auto.tfvars.template* to *\<project-name\>.auto.tfvars*, where *\<project-name\>* is any name of your choice.
 
 2. Within *\<project-name\>.auto.tfvars*, provide tenancy connectivity information and adjust the *security_zones_configuration* input variable, by making the appropriate substitutions:
-   - Replace *\<REPLACE-BY-TENANCY-OCID\>* placeholder by the tenancy OCID. 
    - Replace *\<REPLACE-BY-REPORTING-REGION-NAME\>* placeholder by the actual reporting region name. Example: "us-ashburn-1".
    - Replace *\<REPLACE-BY-SECURITY-ZONE-COMPARTMENT-REFERENCE\>* placeholder by the appropriate security zone compartment reference, expected to be found in the OCI Object Storage object referred by *\<REPLACE-BY-OBJECT-NAME\>*. 
    - Replace *\<REPLACE-BY-SECURITY-ZONE-RECIPE-COMPARTMENT-REFERENCE\>* placeholders by the appropriate security zone recipe compartment references, expected to be found in the OCI Object Storage object referred by *\<REPLACE-BY-OBJECT-NAME\>*.

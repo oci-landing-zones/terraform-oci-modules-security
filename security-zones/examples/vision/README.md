@@ -10,7 +10,7 @@ It enables Cloud Guard service (if not already enabled), setting Ashburn as the 
 1. Rename *input.auto.tfvars.template* to *\<project-name\>.auto.tfvars*, where *\<project-name\>* is any name of your choice.
 
 2. Within *\<project-name\>.auto.tfvars*, provide tenancy connectivity information and adjust the *security_zones_configuration* input variable, by making the appropriate substitutions:
-   - Replace *\<REPLACE-BY-TENANCY-OCID\>* placeholder by the tenancy OCID. 
+   - Replace *\<REPLACE-BY-REPORTING-REGION-NAME*\>* placeholder by the reporting region name. Example: "us-ashburn-1".
    - Replace *\<REPLACE-BY-SECURITY-ZONE-COMPARTMENT-OCID\>* placeholder by the appropriate compartment OCID. 
    - Replace *\<REPLACE-BY-SECURITY-ZONE-RECIPE-COMPARTMENT-OCID\>* placeholders by the appropriate compartment OCIDs. 
 

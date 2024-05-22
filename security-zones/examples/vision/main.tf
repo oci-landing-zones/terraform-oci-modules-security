@@ -3,5 +3,6 @@
 
 module "vision_security_zones" {
   source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/security_zones"
+  tenancy_ocid = var.tenancy_ocid
   security_zones_configuration = var.security_zones_configuration
 }
