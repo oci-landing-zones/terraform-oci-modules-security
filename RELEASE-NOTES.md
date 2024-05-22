@@ -1,13 +1,15 @@
-# May 10, 2024 Release Notes - 0.1.5
+# May 22, 2024 Release Notes - 0.1.5
 
 ## Updates
-1. [Security Zones module](./security-zones/)
+1. [Vaults module](./vaults/)
+    - Virtual private vaults can now be configured for cross-region replication via the newly added *replica-region* attribute. Only applicable to virtual private vaults (VPVs).
+2. [Security Zones module](./security-zones/)
     - *tenancy_ocid* attribute, once required in the *security_zones_configuration*, becomes a variable of its own.
     - *reporting_region* attribute of *security_zones_configuration* defaults to tenancy home region if not defined.
 
 ## Fixes
 1. [VSS module](./vss/)
-    - dynamic runtime dependency issue in *local.target_host_scan_cmps*. It closes [issue 541](https://orahub.oci.oraclecorp.com/nace-shared-services/cis-oci-landing-zone/-/issues/541).
+    - dynamic runtime dependency issue in *local.target_host_scan_cmps*. [Issue 541](https://orahub.oci.oraclecorp.com/nace-shared-services/cis-oci-landing-zone/-/issues/541).
 
 
 # April 16, 2024 Release Notes - 0.1.4
