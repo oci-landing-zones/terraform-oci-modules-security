@@ -71,10 +71,9 @@ For referring to a specific module version, append *ref=\<version\>* to the *sou
 ## <a name="functioning">Module Functioning</a>
 
 In this module, Cloud Guard settings are defined using the *cloud_guard_configuration* object, that supports the following attributes:
-- **tenancy_ocid**: the tenancy OCID.
-- **default_defined_tags**: the default defined tags that are applied to all resources managed by this module. It can be overriden by *defined_tags* attribute in each resource.
-- **default_freeform_tags**: the default freeform tags that are applied to all resources managed by this module. It can be overriden by *freeform_tags* attribute in each resource.
-- **reporting_region**: the Cloud Guard reporting region, where all API calls, except reads, are made on. You can choose the reporting region among the available regions when enabling Cloud Guard. After Cloud Guard is enabled, you cannot change the reporting region without disabling and re-enabling Cloud Guard. Setting this attribute is required if Cloud Guard is enabled by this module.
+- **default_defined_tags**: the default defined tags that are applied to all resources managed by this module. It can be overridden by *defined_tags* attribute in each resource.
+- **default_freeform_tags**: the default freeform tags that are applied to all resources managed by this module. It can be overridden by *freeform_tags* attribute in each resource.
+- **reporting_region**: the Cloud Guard reporting region, where all API calls, except reads, are made on. You can choose the reporting region among the available regions when enabling Cloud Guard. After Cloud Guard is enabled, you cannot change the reporting region without disabling and re-enabling Cloud Guard. Setting this attribute is required if Cloud Guard is enabled by this module. It defaults to tenancy home region if undefined.
 - **self_manage_resources**: whether Oracle managed resources are created by customers. Default: false.
 - **cloned_recipes_prefix**: a prefix to cloned recipe names. Default: "oracle-cloned-".
 - **targets**: the Cloud Guard targets.
@@ -101,8 +100,7 @@ The *targets* attribute supports the following attributes:
 The following snippet enables Cloud Guard service (if not already enabled), setting Ashburn as the reporting region and defining two targets. Both targets monitor compartments under *resource_ocid* compartment and are created in *resource_ocid* compartment. First target (*CLOUD-GUARD-TARGET-1*) uses Oracle provided recipes while the second one (*CLOUD-GUARD-TARGET-2*) uses cloned recipes.
 ```
 cloud_guard_configuration = {
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaa...nuq"
-  reporting_region = "us-ashburn-1"
+  reporting_region = "us-ashburn-1" # It defaults to tenancy home region if undefined.
   
   targets = {
     CLOUD-GUARD-TARGET-1 = {
@@ -127,7 +125,7 @@ Rewriting the example above with the external dependency:
 
 ```
 cloud_guard_configuration = {
-  reporting_region = "us-ashburn-1"
+  reporting_region = "us-ashburn-1" # It defaults to tenancy home region if undefined.
   
   targets = {
     CLOUD-GUARD-TARGET-1 = {
