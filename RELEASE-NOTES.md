@@ -1,7 +1,9 @@
-# May 08, 2024 Release Notes - 0.1.5
+# May 22, 2024 Release Notes - 0.1.5
 
 ## Updates
-1. [Security Zones module](./security-zones/)
+1. [Vaults module](./vaults/)
+    - Virtual private vaults can now be configured for cross-region replication via the newly added *replica-region* attribute. Only applicable to virtual private vaults (VPVs).
+2. [Security Zones module](./security-zones/)
     - *tenancy_ocid* attribute, once required in the *security_zones_configuration*, becomes a variable of its own.
     - *reporting_region* attribute of *security_zones_configuration* defaults to tenancy home region if not defined.
 
