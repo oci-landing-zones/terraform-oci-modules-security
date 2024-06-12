@@ -26,7 +26,7 @@ resource "oci_vulnerability_scanning_host_scan_recipe" "these" {
       }
     }
     application_settings {
-      application_scan_recurrence = each.value.file_scan_settings != null ? (each.value.file_scan_settings.scan_recurrence != null ? upper(each.value.file_scan_settings.scan_recurrence) : (each.value.schedule_settings != null ? (each.value.schedule_settings.scan_type != null ? (each.value.schedule_settings.scan_type == "WEEKLY" ? "FREQ=WEEKLY;INTERVAL=2;WKST=${substr(upper(each.value.schedule_settings.day_of_week != null ? each.value.schedule_settings.day_of_week : "SUNDAY"),0,2)}" : "FREQ=WEEKLY;INTERVAL=2;WKST=SU") : "FREQ=WEEKLY;INTERVAL=2;WKST=SU") : "FREQ=WEEKLY;INTERVAL=2;WKST=SU")) : "FREQ=WEEKLY;INTERVAL=2;WKST=SU"
+      application_scan_recurrence = each.value.file_scan_settings != null ? (each.value.file_scan_settings.scan_recurrence != null ? upper(each.value.file_scan_settings.scan_recurrence) : (each.value.schedule_settings != null ? (each.value.schedule_settings.type != null ? (each.value.schedule_settings.type == "WEEKLY" ? "FREQ=WEEKLY;INTERVAL=2;WKST=${substr(upper(each.value.schedule_settings.day_of_week != null ? each.value.schedule_settings.day_of_week : "SUNDAY"),0,2)}" : "FREQ=WEEKLY;INTERVAL=2;WKST=SU") : "FREQ=WEEKLY;INTERVAL=2;WKST=SU") : "FREQ=WEEKLY;INTERVAL=2;WKST=SU")) : "FREQ=WEEKLY;INTERVAL=2;WKST=SU"
       folders_to_scan {
         folder = each.value.file_scan_settings != null ? (each.value.file_scan_settings.folders_to_scan != null ? join(";", each.value.file_scan_settings.folders_to_scan) : "/") : "/"
         operatingsystem = each.value.file_scan_settings != null ? upper(coalesce(each.value.file_scan_settings.operating_system,"LINUX")) : "LINUX"
