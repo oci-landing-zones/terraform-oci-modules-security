@@ -29,7 +29,7 @@ Using these modules does not require a user extensive knowledge of Terraform or 
 
 ## Help
 
-Open an [issue]() in this repository.
+Open an issue in this repository.
 
 ## Contributing
 
