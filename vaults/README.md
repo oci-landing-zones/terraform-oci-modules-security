@@ -1,4 +1,4 @@
-# OCI Landing Zone Vaults (a.k.a. KMS) Module
+# OCI Landing Zones Vaults (a.k.a. KMS) Module
 
 ![Landing Zone logo](../landing_zone_300.png)
 
