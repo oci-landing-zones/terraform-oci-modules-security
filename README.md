@@ -1,4 +1,4 @@
-# CIS OCI Landing Zone Security Modules
+# OCI Landing Zone Security Modules
 
 ![Landing Zone logo](./landing_zone_300.png)
 
