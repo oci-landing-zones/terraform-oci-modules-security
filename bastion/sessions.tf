@@ -27,7 +27,7 @@ resource "oci_bastion_session" "these" {
   }
   bastion_id = length(regexall("^ocid1.*$", each.value.bastion_id)) > 0 ? each.value.bastion_id : oci_bastion_bastion.these[each.value.bastion_id].id
   key_details {
-    public_key_content = each.value.ssh_public_key != null ? file(each.value.ssh_public_key) : file(var.sessions_configuration.default_ssh_public_key)
+    public_key_content = each.value.ssh_public_key != null ? (fileexists(each.value.ssh_public_key) ? file(each.value.ssh_public_key) : each.value.ssh_public_key) : var.sessions_configuration.default_ssh_public_key != null ? (fileexists(var.sessions_configuration.default_ssh_public_key) ? file(var.sessions_configuration.default_ssh_public_key) : var.sessions_configuration.default_ssh_public_key): null
   }
   target_resource_details {
     session_type                               = each.value.session_type != null ? each.value.session_type : var.sessions_configuration.default_session_type #MANAGED_SSH / PORT_FORWARDING/
