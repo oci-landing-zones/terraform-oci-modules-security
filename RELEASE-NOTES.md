@@ -5,6 +5,7 @@
 2. [Bastion module](./bastion/)
     - In addition to an SSH public key path, an SSH public key literal string can now be used for defining Bastion sessions (*default_ssh_public_key* and *ssh_public_key* attributes).
 
+
 # May 22, 2024 Release Notes - 0.1.5
 
 ## Updates
