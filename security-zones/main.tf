@@ -24,18 +24,16 @@ locals {
   # "ocid1.securityzonessecuritypolicy.oc1..aaaaaaaaff6n52aojbgdg46jpm3kn7nizmh6iwvr7myez7svtfxsfs7irigq"
 
   is_cloud_guard_enabled = data.oci_cloud_guard_cloud_guard_configuration.this.status == "ENABLED" ? true : length(oci_cloud_guard_cloud_guard_configuration.this) > 0 ? (oci_cloud_guard_cloud_guard_configuration.this[0].status == "ENABLED" ? true : false) : false
+
+  regions_map     = { for r in data.oci_identity_regions.these.regions : r.key => r.name } # All regions indexed by region key.
+  home_region_key = data.oci_identity_tenancy.this.home_region_key # Home region key obtained from the tenancy data source
+  home_region     = local.regions_map[local.home_region_key]
 }
 
 resource "oci_cloud_guard_cloud_guard_configuration" "this" {
-  lifecycle {
-    precondition {
-      condition = data.oci_cloud_guard_cloud_guard_configuration.this.status == "ENABLED" ? true : var.security_zones_configuration.reporting_region != null ? true : false
-      error_message = "VALIDATION FAILURE: reporting_region must be provided when enabling Cloud Guard."
-    }
-  }  
   count = data.oci_cloud_guard_cloud_guard_configuration.this.status == "DISABLED" ? 1 : 0 # we only manage this resource if Cloud Guard is currently disabled, which means we have to enable it.
-    compartment_id        = var.security_zones_configuration.tenancy_ocid
-    reporting_region      = var.security_zones_configuration.reporting_region
+    compartment_id        = var.tenancy_ocid
+    reporting_region      = coalesce(var.security_zones_configuration.reporting_region, local.home_region)
     status                = "ENABLED"
     self_manage_resources = var.security_zones_configuration.self_manage_resources != null ? (var.security_zones_configuration.self_manage_resources == true ? true : false) : false
 }

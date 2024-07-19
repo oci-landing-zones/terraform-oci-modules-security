@@ -26,7 +26,7 @@ resource "oci_vulnerability_scanning_host_scan_recipe" "these" {
       }
     }
     application_settings {
-      application_scan_recurrence = each.value.file_scan_settings != null ? (each.value.file_scan_settings.scan_recurrence != null ? upper(each.value.file_scan_settings.scan_recurrence) : (each.value.schedule_settings != null ? (each.value.schedule_settings.scan_type != null ? (each.value.schedule_settings.scan_type == "WEEKLY" ? "FREQ=WEEKLY;INTERVAL=2;WKST=${substr(upper(each.value.schedule_settings.day_of_week != null ? each.value.schedule_settings.day_of_week : "SUNDAY"),0,2)}" : "FREQ=WEEKLY;INTERVAL=2;WKST=SU") : "FREQ=WEEKLY;INTERVAL=2;WKST=SU") : "FREQ=WEEKLY;INTERVAL=2;WKST=SU")) : "FREQ=WEEKLY;INTERVAL=2;WKST=SU"
+      application_scan_recurrence = each.value.file_scan_settings != null ? (each.value.file_scan_settings.scan_recurrence != null ? upper(each.value.file_scan_settings.scan_recurrence) : (each.value.schedule_settings != null ? (each.value.schedule_settings.type != null ? (each.value.schedule_settings.type == "WEEKLY" ? "FREQ=WEEKLY;INTERVAL=2;WKST=${substr(upper(each.value.schedule_settings.day_of_week != null ? each.value.schedule_settings.day_of_week : "SUNDAY"),0,2)}" : "FREQ=WEEKLY;INTERVAL=2;WKST=SU") : "FREQ=WEEKLY;INTERVAL=2;WKST=SU") : "FREQ=WEEKLY;INTERVAL=2;WKST=SU")) : "FREQ=WEEKLY;INTERVAL=2;WKST=SU"
       folders_to_scan {
         folder = each.value.file_scan_settings != null ? (each.value.file_scan_settings.folders_to_scan != null ? join(";", each.value.file_scan_settings.folders_to_scan) : "/") : "/"
         operatingsystem = each.value.file_scan_settings != null ? upper(coalesce(each.value.file_scan_settings.operating_system,"LINUX")) : "LINUX"
@@ -98,25 +98,25 @@ resource "oci_vulnerability_scanning_container_scan_target" "these" {
 }
 
 locals {
-  target_host_scan_cmps = var.scanning_configuration != null ? ([for t in (var.scanning_configuration.host_targets != null ? var.scanning_configuration.host_targets : {}) : length(regexall("^ocid1.*$", t.target_compartment_id)) > 0 ? t.target_compartment_id : var.compartments_dependency[t.target_compartment_id].id]) : []
+  target_host_scan_cmps = var.scanning_configuration != null ? ({for k,v in (var.scanning_configuration.host_targets != null ? var.scanning_configuration.host_targets : {}) : k => (length(regexall("^ocid1.*$", v.target_compartment_id)) > 0 ? v.target_compartment_id : var.compartments_dependency[v.target_compartment_id].id)}) : {}
   instances = flatten([
-    for cmp_id in local.target_host_scan_cmps : [
-      for i in data.oci_core_instances.these[cmp_id].instances : [{"id" : i.id, "compartment_id" : i.compartment_id}]
+    for k, v in local.target_host_scan_cmps : [
+      for i in data.oci_core_instances.these[k].instances : [{"id" : i.id, "compartment_id" : i.compartment_id}]
     ]  
   ])
   vss_plugin_state = flatten([
-    for cmp_id in local.target_host_scan_cmps : [
-      for i in data.oci_core_instances.these[cmp_id].instances : [
+    for k, v in local.target_host_scan_cmps : [
+      for i in data.oci_core_instances.these[k].instances : [
         #{"name" : i.display_name, "ocid" : i.id, "plugin_name" : data.oci_computeinstanceagent_instance_agent_plugins.these[i.id].name, "plugin_enabled" : i.agent_config[0].plugins_config[0].desired_state == "ENABLED" ? true : false, "plugin_status" : data.oci_computeinstanceagent_instance_agent_plugins.these[i.id].status, "plugin_message" : data.oci_computeinstanceagent_instance_agent_plugins.these[i.id].message} :
-        {"name" : i.display_name, "ocid" : i.id, "plugin_enabled" : (i.agent_config[0].plugins_config[0].desired_state == "ENABLED" ? true : false), "reminder" : "VSS requires the plugin ENABLED and RUNNING."}
+        {"instance_name" : i.display_name, "instance_ocid" : i.id, "instance_state": i.state, "is_cloud_agent_plugin_enabled" : (length(i.agent_config[0].plugins_config) > 0 ? (i.agent_config[0].plugins_config[0].desired_state == "ENABLED" ? true : false) : false), "reminder" : "Make sure the Vulnerability Scanning plugin is ENABLED and RUNNING."}
       ]
     ]
   ])
 }
 
 data "oci_core_instances" "these" {
-  for_each = toset(local.target_host_scan_cmps)
-    compartment_id = each.key
+  for_each = local.target_host_scan_cmps
+    compartment_id = each.value
 }
 
 /*

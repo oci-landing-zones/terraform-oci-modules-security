@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Oracle and/or its affiliates.
+# Copyright (c) 2024 Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 variable "tenancy_ocid" {}
@@ -7,16 +7,3 @@ variable "user_ocid" {default = ""}
 variable "fingerprint" {default = ""}
 variable "private_key_path" {default = ""}
 variable "private_key_password" {default = ""}
-
-variable "cloud_guard_configuration" {
-  type = any
-  default = null
-}
-
-variable "oci_compartments_dependency" {
-  type = object({
-    bucket = string
-    object = string 
-  })
-  default = null
-}

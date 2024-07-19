@@ -71,12 +71,11 @@ For referring to a specific module version, append *ref=\<version\>* to the *sou
 ## <a name="functioning">Module Functioning</a>
 
 In this module, Security Zones settings are defined using the *security_zones_configuration* object, that supports the following attributes:
-- **tenancy_ocid**: the tenancy OCID.
 - **default_cis_level**: the default CIS level setting for all recipes with an unspecified *cis_level* attribute. Valid values: "1" and "2". Default: "1". See [CIS Level Setting](#cis_level_setting) for details.
 - **default_defined_tags**: the default defined tags that are applied to all resources managed by this module. It can be overriden by *defined_tags* attribute in each resource.
 - **default_freeform_tags**: the default freeform tags that are applied to all resources managed by this module. It can be overriden by *freeform_tags* attribute in each resource.
 - **default_security_policies_ocids**: a list of default security zone policies OCIDs for all recipes with an unspecified *security_policies_ocids* attribute. These are merged with CIS security zone policies driven off *cis_level* attribute.
-- **reporting_region**: the Cloud Guard reporting region, where all API calls, except reads, are made on. You can choose the reporting region among the available regions when enabling Cloud Guard. After Cloud Guard is enabled, you cannot change the reporting region without disabling and re-enabling Cloud Guard. Setting this attribute is required if Cloud Guard is enabled by this module.
+- **reporting_region**: the Cloud Guard reporting region, where all API calls, except reads, are made on. You can choose the reporting region among the available regions when enabling Cloud Guard. After Cloud Guard is enabled, you cannot change the reporting region without disabling and re-enabling Cloud Guard. Setting this attribute is required if Cloud Guard is enabled by this module. It defaults to tenancy home region if undefined.
 - **self_manage_resources**: whether Oracle managed resources are created by customers. Default: false.
 - **recipes**: the Security Zone recipes. A recipe is a set of policies.
 - **security_zones**: the Security Zones. 
@@ -131,8 +130,7 @@ The following snippet enables Cloud Guard service (if not already enabled), sett
 
 ```
 security_zones_configuration = {
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaa...nuq"
-  reporting_region = "us-ashburn-1"
+  reporting_region = "us-ashburn-1" # It defaults to tenancy home region if undefined.
   
   recipes = {
     CIS-L1-RECIPE = {
@@ -166,9 +164,7 @@ Rewriting the example above with the external dependency:
 
 ```
 security_zones_configuration = {
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaa...nuq"
-  reporting_region = "us-ashburn-1"
-  
+  reporting_region = "us-ashburn-1" # It defaults to tenancy home region if undefined.
   recipes = {
     CIS-L1-RECIPE = {
       name = "vision-security-zone-cis-level-1-recipe"

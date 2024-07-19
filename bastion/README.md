@@ -71,14 +71,14 @@ The bastions themselves are defined within the **bastions** attribute. In Terraf
 Sessions are managed using the **sessions_configuration** object. It contains a set of attributes starting with the prefix *default_* and an attribute named *sessions* .The *default_* attribute values are applied to all sessions, unless overridden at the session object level.
 
 The defined **default_** attributes are the following:
-- **default_ssh_public_key**: (Optional) Default SSH public key path for all sessions. It can be overridden by the *ssh_public_key* attribute in each session.
+- **default_ssh_public_key**: (Optional) Default SSH public key path or SSH public key literal string for all sessions. It can be overridden by the *ssh_public_key* attribute in each session.
 - **default_session_type**: (Optional) Default session type for all sessions. Supported values are "MANAGED_SSH" and "PORT_FORWARDING". It can be overridden by *session_type* attribute in each session.
 
 Sessions are defined using the  **sessions** attribute. In Terraform terms, it is a map of objects, where each object is referred by an identifying key. The following attributes are supported:
 - **bastion_id**: The bastion where the session is created. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID in the *bastions* map of objects.
-- **ssh_public_key**: (Optional) The SSH public key path to connect to target. *default_ssh_public_key* is used if undefined.
+- **ssh_public_key**: (Optional) The SSH public key path or the SSH public key literal string to connect to target. *default_ssh_public_key* is used if undefined.
 - **session_type**: (Optional) The session type. Supported values are "MANAGED_SSH" and "PORT_FORWARDING". *default_session_type* if undefined.
-- **target_resource**: Either the FQDN, OCID or IP of the target resource.
+- **target_resource**: Either the FQDN, OCID or private IP address of the target resource that the session connects to.
 - **target_user**: (Optional) The SSH user name in the target resource. Required for "MANAGED_SSH" session type. 
 - **target_port**: The SSH port number.
 - **session_ttl_in_seconds**: (Optional) The session time to live.
@@ -96,9 +96,8 @@ Example:
 	}
 }
 ```
-- **network_dependency**: A map of objects containing the externally managed network resources (including subnets and network security groups) this module may depend on. All map objects must have the same type and should contain the following attributes:
+- **network_dependency**: A map of objects containing the externally managed network resources (subnets) this module may depend on. All map objects must have the same type and should contain the following attributes:
   - An *id* attribute with the subnet OCID.
-  - An *id* attribute with the network security group OCID.
 
 Example:
 ```
@@ -107,12 +106,7 @@ Example:
     "APP-SUBNET" : {
       "id" : "ocid1.subnet.oc1.iad.aaaaaaaax...e7a"
     }
-  },
-  "network_security_groups" : { 
-    "APP-NSG" : {
-      "id" : "ocid1.networksecuritygroup.oc1.iad.aaaaaaaa...xlq"
-    }
-  } 
+  }
 }
 ```
 
@@ -129,16 +123,14 @@ Example:
 ```
 
 - **endpoints_dependency**: A map of objects containing the externally managed endpoint resources this module may depend on. All map objects must have the same type and should contain the following attributes:
-  - A *private_endpoint* attribute with endpoint IP.
+  - An *ip_address* attribute with endpoint private IP address that the bastion session connects to.
 
 Example:
 ```
 {
   "OKE1" : {
-    "endpoints" : {
-        "private_endpoint" : "10.0.1.23"
-    }
-  }, 
+    "ip_address" : "10.0.1.23"
+  } 
 } 
 ```
 ## <a name="related">Related Documentation</a>

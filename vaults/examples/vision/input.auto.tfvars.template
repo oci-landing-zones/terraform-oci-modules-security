@@ -29,6 +29,7 @@ vaults_configuration = {
   vaults = {
     VISION-VAULT = {
       name = "vision-vault"
+      # replica_region = "<REPLACE-BY-REGION-NAME-TO-REPLICATE-VAULT>" # available if your vault is a VPV (virtual private vault) and you want to replicate it to another region. for instance "us-phoenix-1", "us-ashburn-1"
     }
   }
   keys = {
