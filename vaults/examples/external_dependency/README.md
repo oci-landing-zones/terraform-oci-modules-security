@@ -1,4 +1,4 @@
-# CIS OCI Vaults Module Example - External Dependency
+# OCI Vaults Module Example - External Dependency
 
 ## Introduction
 

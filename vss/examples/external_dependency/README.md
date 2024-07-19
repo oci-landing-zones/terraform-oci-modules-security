@@ -1,4 +1,4 @@
-# CIS OCI Vulnerability Scanning Module Example - External Dependency
+# OCI Vulnerability Scanning Module Example - External Dependency
 
 ## Introduction
 

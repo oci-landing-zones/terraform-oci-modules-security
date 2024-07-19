@@ -1,4 +1,4 @@
-# CIS OCI Vaults Module Example
+# OCI Vaults Module Example
 
 ## Introduction
 
