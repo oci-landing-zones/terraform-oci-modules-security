@@ -1,3 +1,9 @@
+# August XX, 2024 Release Notes - 0.1.8
+
+## Updates
+1. All modules now require Terraform binary equal or greater than 1.3.0.
+
+
 # July 19, 2024 Release Notes - 0.1.6
 
 ## Updates
