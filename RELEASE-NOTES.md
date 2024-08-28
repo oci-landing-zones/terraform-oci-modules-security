@@ -1,10 +1,15 @@
+# August 27, 2024 Release Notes - 0.1.7
+
+## Updates
+1. All modules now require Terraform binary equal or greater than 1.3.0.
+2. *cislz-terraform-module* tag renamed to *ocilz-terraform-module*.
+
 # July 19, 2024 Release Notes - 0.1.6
 
 ## Updates
 1. Aligned [README.md](./README.md) structure to Oracle's GitHub organizations requirements.
 2. [Bastion module](./bastion/)
     - In addition to an SSH public key path, an SSH public key literal string can now be used for defining Bastion sessions (*default_ssh_public_key* and *ssh_public_key* attributes).
-
 
 # May 22, 2024 Release Notes - 0.1.5
 
