@@ -28,6 +28,8 @@ locals {
   regions_map     = { for r in data.oci_identity_regions.these.regions : r.key => r.name } # All regions indexed by region key.
   home_region_key = data.oci_identity_tenancy.this.home_region_key # Home region key obtained from the tenancy data source
   home_region     = local.regions_map[local.home_region_key]
+
+  check_root_compartment = var.security_zones_configuration != null ? var.security_zones_configuration.check_root_compartment == null ? true : var.security_zones_configuration.check_root_compartment : null
 }
 
 resource "oci_cloud_guard_cloud_guard_configuration" "this" {
@@ -39,7 +41,7 @@ resource "oci_cloud_guard_cloud_guard_configuration" "this" {
 }
 
 resource "oci_cloud_guard_security_recipe" "these" {
-  for_each = var.security_zones_configuration != null ? (var.security_zones_configuration.recipes != null ? var.security_zones_configuration.recipes : {}) : {}
+  for_each = var.security_zones_configuration != null ? (var.security_zones_configuration.recipes != null ? { for k, v in var.security_zones_configuration.recipes : k => v if ((local.check_root_compartment == true && v.compartment_id != var.tenancy_ocid) || (local.check_root_compartment == false)) } : {}) : {}
     compartment_id    = length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id
     display_name      = each.value.name
     description       = each.value.description != null ? each.value.description : each.value.name
@@ -49,7 +51,7 @@ resource "oci_cloud_guard_security_recipe" "these" {
 }
 
 resource "oci_cloud_guard_security_zone" "these" {
-  for_each = var.security_zones_configuration != null ? var.security_zones_configuration.security_zones : {}
+  for_each = var.security_zones_configuration != null ? { for k, v in var.security_zones_configuration.security_zones : k => v if ((local.check_root_compartment == true && v.compartment_id != var.tenancy_ocid) || (local.check_root_compartment == false)) }: {}
     compartment_id    = length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id
     display_name            = each.value.name
     description             = each.value.description != null ? each.value.description : each.value.name
