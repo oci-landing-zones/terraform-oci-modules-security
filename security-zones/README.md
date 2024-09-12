@@ -62,7 +62,7 @@ In this module, Security Zones settings are defined using the *security_zones_co
 - **default_security_policies_ocids**: a list of default security zone policies OCIDs for all recipes with an unspecified *security_policies_ocids* attribute. These are merged with CIS security zone policies driven off *cis_level* attribute.
 - **reporting_region**: the Cloud Guard reporting region, where all API calls, except reads, are made on. You can choose the reporting region among the available regions when enabling Cloud Guard. After Cloud Guard is enabled, you cannot change the reporting region without disabling and re-enabling Cloud Guard. Setting this attribute is required if Cloud Guard is enabled by this module. It defaults to tenancy home region if undefined.
 - **self_manage_resources**: whether Oracle managed resources are created by customers. Default: false.
-- **check_root_compartment**: Checks whether the user can deploy Security Zone resources in the root compartment. Default: true.
+- **check_root_compartment**: Checks whether the user can deploy Security Zone resources in the root compartment (tenancy). If set to true, Security Zone resources will not be allowed to be deployed in the root compartment. If set to false, the check will be removed and Security Zone resources will be allowed to be deployed in the root compartment. Default: true.
 - **recipes**: the Security Zone recipes. A recipe is a set of policies.
 - **security_zones**: the Security Zones. 
 
