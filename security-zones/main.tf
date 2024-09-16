@@ -45,7 +45,7 @@ resource "oci_cloud_guard_security_recipe" "these" {
   lifecycle {
     precondition {
       condition     = (local.check_root_compartment == true && each.value.compartment_id != var.tenancy_ocid) || (local.check_root_compartment == false)
-      error_message = "VALIDATION FAILURE: Security Zones recipe ${each.key} cannot be deployed in the root compartment unless check_root_compartment variable is set to false"
+      error_message = "VALIDATION FAILURE: Security Zones recipe \"${each.key}\" cannot be deployed in Root compartment. To force deployment in Root compartment, set \"check_root_compartment\" attribute to false."
     }
   }
   compartment_id    = length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id
@@ -61,7 +61,7 @@ resource "oci_cloud_guard_security_zone" "these" {
   lifecycle {
     precondition {
       condition     = (local.check_root_compartment == true && each.value.compartment_id != var.tenancy_ocid) || (local.check_root_compartment == false)
-      error_message = "VALIDATION FAILURE: Security Zone ${each.key} cannot be deployed in the root compartment unless check_root_compartment variable is set to false"
+      error_message = "VALIDATION FAILURE: Security Zone \"${each.key}\" cannot be deployed in Root compartment. To force deployment in Root compartment, set \"check_root_compartment\" attribute to false."
     }
   }
   compartment_id          = length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id
