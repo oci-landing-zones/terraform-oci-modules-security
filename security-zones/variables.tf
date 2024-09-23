@@ -10,7 +10,7 @@ variable "security_zones_configuration" {
     default_freeform_tags = optional(map(string))
     reporting_region = optional(string) # the reporting region.
     self_manage_resources = optional(bool) # whether Oracle managed resources are created by customers. Default: false.
-    check_root_compartment = optional(bool) # Checks whether the user can deploy Security Zone resources in the root compartment. Default: true.
+    enable_obp_checks = optional(bool) # Checks whether the user can deploy Security Zone resources in the root compartment. Default: true.
 
     recipes = optional(map(object({
       name = string

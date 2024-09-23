@@ -29,7 +29,7 @@ locals {
   home_region_key = data.oci_identity_tenancy.this.home_region_key                         # Home region key obtained from the tenancy data source
   home_region     = local.regions_map[local.home_region_key]
 
-  check_root_compartment = var.security_zones_configuration != null ? var.security_zones_configuration.check_root_compartment == null ? true : var.security_zones_configuration.check_root_compartment : null
+  enable_obp_checks = var.security_zones_configuration != null ? var.security_zones_configuration.enable_obp_checks == null ? true : var.security_zones_configuration.enable_obp_checks : null
 }
 
 resource "oci_cloud_guard_cloud_guard_configuration" "this" {
@@ -44,8 +44,8 @@ resource "oci_cloud_guard_security_recipe" "these" {
   for_each = var.security_zones_configuration != null ? (var.security_zones_configuration.recipes != null ? var.security_zones_configuration.recipes : {}) : {}
   lifecycle {
     precondition {
-      condition     = (local.check_root_compartment == true && each.value.compartment_id != var.tenancy_ocid) || (local.check_root_compartment == false)
-      error_message = "VALIDATION FAILURE: Security Zones recipe \"${each.key}\" cannot be deployed in Root compartment. To force deployment in Root compartment, set \"check_root_compartment\" attribute to false."
+      condition     = (local.enable_obp_checks == true && each.value.compartment_id != var.tenancy_ocid) || (local.enable_obp_checks == false)
+      error_message = "VALIDATION FAILURE: Security Zones recipe \"${each.key}\" cannot be deployed in Root compartment. To force deployment in Root compartment, set \"enable_obp_checks\" attribute to false."
     }
   }
   compartment_id    = length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id
@@ -60,8 +60,8 @@ resource "oci_cloud_guard_security_zone" "these" {
   for_each = var.security_zones_configuration != null ? var.security_zones_configuration.security_zones : {}
   lifecycle {
     precondition {
-      condition     = (local.check_root_compartment == true && each.value.compartment_id != var.tenancy_ocid) || (local.check_root_compartment == false)
-      error_message = "VALIDATION FAILURE: Security Zone \"${each.key}\" cannot be deployed in Root compartment. To force deployment in Root compartment, set \"check_root_compartment\" attribute to false."
+      condition     = (local.enable_obp_checks == true && each.value.compartment_id != var.tenancy_ocid) || (local.enable_obp_checks == false)
+      error_message = "VALIDATION FAILURE: Security Zone \"${each.key}\" cannot be deployed in Root compartment. To force deployment in Root compartment, set \"enable_obp_checks\" attribute to false."
     }
   }
   compartment_id          = length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id
