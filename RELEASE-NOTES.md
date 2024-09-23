@@ -1,3 +1,9 @@
+# September 23, 2024 Release Notes - 0.1.8
+
+## Updates
+1. By default, [Security Zones](./security-zones/) cannot be created in the Root compartment. That is enforced in a Terraform precondition. For forcing a Security Zone in the Root compartment, set attribute *enable_opb_checks* to false.
+
+
 # August 27, 2024 Release Notes - 0.1.7
 
 ## Updates
