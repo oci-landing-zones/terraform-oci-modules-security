@@ -35,7 +35,7 @@ resource "oci_zpr_zpr_policy" "these" {
   compartment_id = var.tenancy_ocid
   description    = each.value.description
   name           = each.value.name
-  statements     = var.statements
+  statements     = each.value.statements
   #Optional
   defined_tags  = each.value.defined_tags != null ? each.value.defined_tags : var.zpr_configuration.default_defined_tags
   freeform_tags = each.value.freeform_tags != null ? each.value.freeform_tags : var.zpr_configuration.default_freeform_tags
