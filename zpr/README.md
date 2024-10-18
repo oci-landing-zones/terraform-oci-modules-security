@@ -51,7 +51,7 @@ module "zpr" {
 ```
 For referring to a specific module version, append *ref=\<version\>* to the *source* attribute value, as in:
 ```
-  source = "github.com/oci-landing-zones/terraform-oci-modules-security//zpr?ref=v0.1.9"
+source = "github.com/oci-landing-zones/terraform-oci-modules-security//zpr?ref=v0.1.9"
 ```
 
 ## <a name="functioning">Module Functioning</a>
@@ -85,7 +85,7 @@ The *security_attributes* attribute supports the following attributes:
 - **name**: the target name. This is the security attribute key. The name must be unique within the namespace and cannot be changed.
 - **security_attribute_namespace_id**: the OCID of the security attribute namespace.
 - **validator**: (Optional) Validates a security attribute value. Each validator performs validation steps in addition to the standard validation for security attribute values. [More Information]("https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/security_attribute_security_attribute")
-  - **validator_type**: (Required) Specifies the type of validation: DEFAULT (no validation) or ENUM. TODO: fix
+  - **validator_type**: (Required) Specifies the type of validation: set to *ENUM* if adding a validator, null otherwise.
   - **values**: (Optional) The list of allowed values for a security attribute value. Applicable when validator_type=ENUM
 - **defined_tags**: (Optional) the namespace defined tags. *default_defined_tags* is used if undefined.
 - **freeform_tags**: (Optional) the namespace freeform tags. *default_freeform_tags* is used if undefined.
