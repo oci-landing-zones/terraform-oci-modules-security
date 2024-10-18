@@ -21,7 +21,9 @@ resource "oci_security_attribute_security_attribute" "these" {
   for_each                        = var.zpr_configuration.security_attributes != null ? var.zpr_configuration.security_attributes : {}
   description                     = each.value.description
   name                            = each.value.name
-  security_attribute_namespace_id = each.value.namespace_id != null ? each.value.namespace_id : each.value.namespace_key != null ? oci_security_attribute_security_attribute_namespace.these[each.value.namespace_key].id : "oracle-zpr"
+  
+  security_attribute_namespace_id = each.value.namespace_id != null ? each.value.namespace_id : each.value.namespace_key != null ? oci_security_attribute_security_attribute_namespace.these[each.value.namespace_key].id : data.oci_security_attribute_security_attribute_namespaces.default_security_attribute_namespaces.security_attribute_namespaces[0].id
+
   dynamic "validator" {
     for_each = each.value.validator_type == "ENUM" ? [1] : []
     content {
