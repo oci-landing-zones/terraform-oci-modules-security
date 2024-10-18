@@ -51,7 +51,7 @@ zpr_configuration = {
     ZPR-POLICY-1 = {
       description = "ZPR policy"
       name = "zpr-policy-1"
-      statements = ["in zpr-vision-namespace.app-security-attribute VCN allow zpr-vision-namespace.app-security-attribute endpoints to connect to osn-services-ip-addresses"]
+      statements = ["in zpr-vision-namespace.app-security-attribute:hr-app VCN allow zpr-vision-namespace.app-security-attribute:hr-app endpoints to connect to osn-services-ip-addresses"]
     }
   }
 }
