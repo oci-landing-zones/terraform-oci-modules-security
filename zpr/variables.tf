@@ -22,6 +22,7 @@ variable "zpr_configuration" {
       name             = string
       namespace_id     = optional(string)
       namespace_key    = optional(string)
+      validator_type    = optional(string)
       validator_values = optional(list(string)) # Only applicable when validator_type = "ENUM"
     })))
 

@@ -18,15 +18,16 @@ resource "oci_security_attribute_security_attribute_namespace" "these" {
 }
 
 resource "oci_security_attribute_security_attribute" "these" {
-  #Required
   for_each                        = var.zpr_configuration.security_attributes != null ? var.zpr_configuration.security_attributes : {}
   description                     = each.value.description
   name                            = each.value.name
   security_attribute_namespace_id = each.value.namespace_id != null ? each.value.namespace_id : each.value.namespace_key != null ? oci_security_attribute_security_attribute_namespace.these[each.value.namespace_key].id : "oracle-zpr"
-  #Optional
-  validator {
-    validator_type = each.value.validator_values != null ? "ENUM" : null
-    values         = each.value.validator_values
+  dynamic "validator" {
+    for_each = each.value.validator_type == "ENUM" ? [1] : []
+    content {
+      validator_type = each.value.validator_type
+      values         = each.value.validator_values
+    }
   }
 }
 
