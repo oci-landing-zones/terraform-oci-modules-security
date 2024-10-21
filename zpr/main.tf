@@ -8,7 +8,7 @@ resource "oci_zpr_configuration" "this" {
 
 resource "oci_security_attribute_security_attribute_namespace" "these" {
   for_each       = var.zpr_configuration.namespaces != null ? var.zpr_configuration.namespaces : {}
-  compartment_id = each.value.compartment_id
+  compartment_id = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id) : null
   description    = each.value.description
   name           = each.value.name
 
@@ -21,7 +21,6 @@ resource "oci_security_attribute_security_attribute" "these" {
   for_each                        = var.zpr_configuration.security_attributes != null ? var.zpr_configuration.security_attributes : {}
   description                     = each.value.description
   name                            = each.value.name
-  
   security_attribute_namespace_id = each.value.namespace_id != null ? each.value.namespace_id : each.value.namespace_key != null ? oci_security_attribute_security_attribute_namespace.these[each.value.namespace_key].id : data.oci_security_attribute_security_attribute_namespaces.default_security_attribute_namespaces.security_attribute_namespaces[0].id
 
   dynamic "validator" {

@@ -35,3 +35,11 @@ variable "zpr_configuration" {
     })))
   })
 }
+
+variable compartments_dependency {
+  description = "A map of objects containing the externally managed compartments this module may depend on. All map objects must have the same type and must contain at least an 'id' attribute (representing the compartment OCID) of string type."
+  type = map(object({
+    id = string # the compartment OCID
+  }))
+  default = null
+}

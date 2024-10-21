@@ -59,8 +59,9 @@ source = "github.com/oci-landing-zones/terraform-oci-modules-security//zpr?ref=v
 In this module, ZPR settings are defined using the *zpr_configuration* object, that supports the following attributes:
 - **default_defined_tags**: the default defined tags that are applied to all resources managed by this module. It can be overridden by *defined_tags* attribute in each resource.
 - **default_freeform_tags**: the default freeform tags that are applied to all resources managed by this module. It can be overridden by *freeform_tags* attribute in each resource.
+- **namespaces**: the security attribute namespaces are containers for a set of security attributes.
 - **security_attributes**: the security attributes are labels that can be referenced in ZPR policy to control access to supported resources.
-- **zpr_policies**: the ZPR policies that enforce access control based on the security attributes that are applied to the resources involved in an access attempt. A policy is a container for a set of policy statements.
+- **zpr_policies**: the ZPR policies that enforce access control based on the security attributes that are applied to the resources involved in an access attempt. A policy is a container for a set of policy statements written in ZPL (ZPR Policy Language).
 
 ### Defining ZPR Namespaces
 
@@ -83,12 +84,12 @@ The *security_attributes* attribute supports the following attributes:
 
 - **description**: the target description.
 - **name**: the target name. This is the security attribute key. The name must be unique within the namespace and cannot be changed.
-- **security_attribute_namespace_id**: the OCID of the security attribute namespace.
-- **validator**: (Optional) Validates a security attribute value. Each validator performs validation steps in addition to the standard validation for security attribute values. [More Information]("https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/security_attribute_security_attribute")
-  - **validator_type**: (Required) Specifies the type of validation: set to *ENUM* if adding a validator, null otherwise.
-  - **values**: (Optional) The list of allowed values for a security attribute value. Applicable when validator_type=ENUM
-- **defined_tags**: (Optional) the namespace defined tags. *default_defined_tags* is used if undefined.
-- **freeform_tags**: (Optional) the namespace freeform tags. *default_freeform_tags* is used if undefined.
+- **namespace_id**: the OCID of the security attribute namespace.
+- **namespace_key**: the key name of the security attribute namespace. If both namespace_id and namespace_key are null, then the default *oracle-zpr* namespace will be used.
+- **validator_type**: (Optional) Specifies the type of validation for a security attribute: set to *ENUM* if adding a validator, null otherwise.
+- **validator_values**: (Optional) The list of allowed values for a security attribute value. Applicable when validator_type=ENUM. Each validator performs validation steps in addition to the standard validation for security attribute values. [More Information]("https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/security_attribute_security_attribute")
+- **defined_tags**: (Optional) the security attribute defined tags. *default_defined_tags* is used if undefined.
+- **freeform_tags**: (Optional) the security attribute freeform tags. *default_freeform_tags* is used if undefined.
 
 
 ### Defining ZPR Policies
@@ -99,9 +100,9 @@ The *zpr_policies* attribute supports the following attributes:
 
 - **description**: the target description.
 - **name**: the target name. The name must be unique across all ZPL policies in the tenancy.
-- **statements**: An array of ZprPolicy statements(up to 25 statements per ZprPolicy) written in the Zero Trust Packet Routing Policy Language. [More Information](https://docs.oracle.com/en-us/iaas/Content/zero-trust-packet-routing/managing-zpr-policies.htm#zpr-policy-template-builder)
-- **defined_tags**: (Optional) the namespace defined tags. *default_defined_tags* is used if undefined.
-- **freeform_tags**: (Optional) the namespace freeform tags. *default_freeform_tags* is used if undefined.
+- **statements**: An array of ZprPolicy statements (up to 25 statements per ZprPolicy) written in the Zero Trust Packet Routing Policy Language. [More Information](https://docs.oracle.com/en-us/iaas/Content/zero-trust-packet-routing/managing-zpr-policies.htm#zpr-policy-template-builder)
+- **defined_tags**: (Optional) the policy defined tags. *default_defined_tags* is used if undefined.
+- **freeform_tags**: (Optional) the policy freeform tags. *default_freeform_tags* is used if undefined.
 
 
 
@@ -149,9 +150,7 @@ zpr_configuration = {
 ```
 ### <a name="ext_dep">External Dependencies</a>
 
-The example above has some dependencies. Specifically, it requires *tenancy_ocid* and *resource_id* values. These values need to be obtained somehow. In some cases, you can simply get them from the team that is managing compartments and operate on a manual copy-and-paste fashion. However, in the automation world, copying and pasting can be slow and error prone. More sophisticated automation approaches would get these dependencies from their producing Terraform configurations. With this scenario in mind, **the module overloads the attributes ending in *_id***. The *\*_id* attributes can be assigned a literal OCID (as in the example above, for those whom copying and pasting is an acceptable approach) or a reference (a key) to an OCID. If a key to an OCID is given, the module requires a map of objects where the key and the OCID are expected to be found. This map of objects is passed to the module via the *compartments_dependency* variable. 
-
-**Note**: The special key "TENANCY-ROOT" is reserved and should be used for referring to the tenancy OCID in *resource_id* and *compartment_id* attributes.
+The example above has some dependencies. Specifically, it requires *tenancy_ocid* and *resource_id* values. These values need to be obtained somehow. In some cases, you can simply get them from the team that is managing compartments and operate on a manual copy-and-paste fashion. However, in the automation world, copying and pasting can be slow and error-prone. More sophisticated automation approaches would get these dependencies from their producing Terraform configurations. With this scenario in mind, **the module overloads the attributes ending in *_id***. The *\*_id* attributes can be assigned a literal OCID (as in the example above, for those whom copying and pasting is an acceptable approach) or a reference (a key) to an OCID. If a key to an OCID is given, the module requires a map of objects where the key and the OCID are expected to be found. This map of objects is passed to the module via the *compartments_dependency* variable. 
 
 Rewriting the example above with the external dependency:
 
