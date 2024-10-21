@@ -20,8 +20,7 @@ variable "zpr_configuration" {
     security_attributes = optional(map(object({
       description      = string
       name             = string
-      namespace_id     = optional(string)
-      namespace_key    = optional(string)
+      namespace_name = optional(string) # Overloaded, takes namespace name, namespace key, or namespace ocid
       validator_type   = optional(string) # Must be "ENUM" if adding validator_values
       validator_values = optional(list(string)) # Only applicable when validator_type = "ENUM"
     })))

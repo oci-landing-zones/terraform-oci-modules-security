@@ -21,7 +21,21 @@ resource "oci_security_attribute_security_attribute" "these" {
   for_each                        = var.zpr_configuration.security_attributes != null ? var.zpr_configuration.security_attributes : {}
   description                     = each.value.description
   name                            = each.value.name
-  security_attribute_namespace_id = each.value.namespace_id != null ? each.value.namespace_id : each.value.namespace_key != null ? oci_security_attribute_security_attribute_namespace.these[each.value.namespace_key].id : data.oci_security_attribute_security_attribute_namespaces.default_security_attribute_namespaces.security_attribute_namespaces[0].id
+
+  # if name is null, use default value
+  security_attribute_namespace_id = each.value.namespace_name == null ?  data.oci_security_attribute_security_attribute_namespaces.default_security_attribute_namespaces.security_attribute_namespaces[0].id : (
+    # is namespace_name and ocid
+    length(regexall("^ocid1.*$", each.value.namespace_name)) > 0 ? (
+      each.value.namespace_name ) : (   # if name is ocid, use name as ocid
+      # else, name is not ocid, check if name is namespace name
+      contains(keys(oci_security_attribute_security_attribute_namespace.these), each.value.namespace_name) ) ? (
+        # if name is namespace key, use namespace keys map's corresponding value
+          oci_security_attribute_security_attribute_namespace.these[each.value.namespace_name].id ) : (
+          # else, query namespace names
+          length(data.oci_security_attribute_security_attribute_namespaces.query_security_attribute_namespaces[each.key].security_attribute_namespaces) > 0) ? (
+              data.oci_security_attribute_security_attribute_namespaces.query_security_attribute_namespaces[each.key].security_attribute_namespaces[0].id) : (
+              # else, use defaul namespace id
+              data.oci_security_attribute_security_attribute_namespaces.default_security_attribute_namespaces.security_attribute_namespaces[0].id ))
 
   dynamic "validator" {
     for_each = each.value.validator_type == "ENUM" ? [1] : []
