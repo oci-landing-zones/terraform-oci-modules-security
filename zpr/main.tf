@@ -22,19 +22,16 @@ resource "oci_security_attribute_security_attribute" "these" {
   description                     = each.value.description
   name                            = each.value.name
 
-  security_attribute_namespace_id = each.value.namespace_id == null ?  data.oci_security_attribute_security_attribute_namespaces.default_security_attribute_namespaces.security_attribute_namespaces[0].id : (
-    # is namespace_id and ocid
+  security_attribute_namespace_id = each.value.namespace_id != null ? (
     length(regexall("^ocid1.*$", each.value.namespace_id)) > 0 ? (
-      each.value.namespace_id ) : (   # if name is ocid, use name as ocid
-      # else, name is not ocid, check if name is namespace name
+      each.value.namespace_id ) : (
       contains(keys(oci_security_attribute_security_attribute_namespace.these), each.value.namespace_id) ) ? (
-        # if name is namespace key, use namespace keys map's corresponding value
           oci_security_attribute_security_attribute_namespace.these[each.value.namespace_id].id ) : (
-          # else, query namespace names
-          length(data.oci_security_attribute_security_attribute_namespaces.query_security_attribute_namespaces[each.key].security_attribute_namespaces) > 0) ? (
-              data.oci_security_attribute_security_attribute_namespaces.query_security_attribute_namespaces[each.key].security_attribute_namespaces[0].id) : (
-              # else, use defaul namespace id
-              data.oci_security_attribute_security_attribute_namespaces.default_security_attribute_namespaces.security_attribute_namespaces[0].id ))
+              data.oci_security_attribute_security_attribute_namespaces.query_security_attribute_namespaces[each.key].security_attribute_namespaces[0].id)) : (
+      data.oci_security_attribute_security_attribute_namespaces.default_security_attribute_namespaces.security_attribute_namespaces[0].id
+      )
+
+
 
   dynamic "validator" {
     for_each = each.value.validator_type == "ENUM" ? [1] : []
@@ -52,6 +49,6 @@ resource "oci_zpr_zpr_policy" "these" {
   name           = each.value.name
   statements     = each.value.statements
   #Optional
-  defined_tags  = each.value.defined_tags != null ? each.value.defined_tags : var.zpr_configuration.defined_tags
+  defined_tags  = each.value.defined_tags != null ? each.value.defined_tags : var.zpr_configuration.default_defined_tags
   freeform_tags = each.value.freeform_tags != null ? each.value.freeform_tags : var.zpr_configuration.default_freeform_tags
 }
