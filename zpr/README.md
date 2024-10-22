@@ -85,8 +85,7 @@ The *security_attributes* attribute supports the following attributes:
 
 - **description**: the target description.
 - **name**: the target name. This is the security attribute key. The name must be unique within the namespace and cannot be changed.
-- **namespace_id**: the OCID of the security attribute namespace.
-- **namespace_name**: overloaded, either the key, name, or OCID of the security attribute namespace. If null or invalid, then the default *oracle-zpr* namespace will be used.
+- **namespace_id**: This variable is overloaded, and can take either the key, name, or OCID of the security attribute namespace. If null or invalid (namespace doesn't exist), then the default *oracle-zpr* namespace will be used.
 - **validator_type**: (Optional) Specifies the type of validation for a security attribute: set to *ENUM* if adding a validator, null otherwise.
 - **validator_values**: (Optional) The list of allowed values for a security attribute value. Applicable when validator_type=ENUM. Each validator performs validation steps in addition to the standard validation for security attribute values. [More Information]("https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/security_attribute_security_attribute")
 - **defined_tags**: (Optional) the security attribute defined tags. *default_defined_tags* is used if undefined.
