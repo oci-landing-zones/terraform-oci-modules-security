@@ -1,9 +1,14 @@
 resource "oci_zpr_configuration" "this" {
-  count          = data.oci_zpr_configuration.this.zpr_status == "DISABLED" ? 1 : 0
+  count          = data.oci_zpr_configuration.this.zpr_status == "ENABLED" ? 0 : 1
   compartment_id = var.tenancy_ocid
   defined_tags   = var.zpr_configuration.default_defined_tags
   freeform_tags  = var.zpr_configuration.default_freeform_tags
   zpr_status     = "ENABLED"
+}
+
+resource "time_sleep" "wait_after_zpr_configuration" {
+  depends_on = [oci_zpr_configuration.this]
+  create_duration = "30s"
 }
 
 resource "oci_security_attribute_security_attribute_namespace" "these" {
@@ -15,6 +20,8 @@ resource "oci_security_attribute_security_attribute_namespace" "these" {
   #Optional
   defined_tags  = each.value.defined_tags != null ? each.value.defined_tags : var.zpr_configuration.default_defined_tags
   freeform_tags = each.value.freeform_tags != null ? each.value.freeform_tags : var.zpr_configuration.default_freeform_tags
+
+  depends_on    = [time_sleep.wait_after_zpr_configuration]
 }
 
 resource "oci_security_attribute_security_attribute" "these" {
@@ -31,8 +38,6 @@ resource "oci_security_attribute_security_attribute" "these" {
       data.oci_security_attribute_security_attribute_namespaces.default_security_attribute_namespaces.security_attribute_namespaces[0].id
       )
 
-
-
   dynamic "validator" {
     for_each = each.value.validator_type == "ENUM" ? [1] : []
     content {
@@ -40,6 +45,8 @@ resource "oci_security_attribute_security_attribute" "these" {
       values         = each.value.validator_values
     }
   }
+
+  depends_on    = [time_sleep.wait_after_zpr_configuration]
 }
 
 resource "oci_zpr_zpr_policy" "these" {
@@ -51,4 +58,6 @@ resource "oci_zpr_zpr_policy" "these" {
   #Optional
   defined_tags  = each.value.defined_tags != null ? each.value.defined_tags : var.zpr_configuration.default_defined_tags
   freeform_tags = each.value.freeform_tags != null ? each.value.freeform_tags : var.zpr_configuration.default_freeform_tags
+
+  depends_on    = [time_sleep.wait_after_zpr_configuration]
 }

@@ -127,7 +127,7 @@ zpr_configuration = {
     SECURITY-ATTRIBUTE-APP = {
       description = "Security attribute for zpr-vision-namespace applications"
       name = "app-security-attribute"
-      namespace_key = "ZPR-VISION-NAMESPACE"
+      namespace_id = "ZPR-VISION-NAMESPACE"
       validator_type = "ENUM"
       validator_values = ["hr-app", "payroll-app", "benefits-app"]
     }
@@ -171,7 +171,7 @@ zpr_configuration = {
     SECURITY-ATTRIBUTE-APP = {
       description = "Security attribute for zpr-vision-namespace applications"
       name = "app-security-attribute"
-      namespace_key = "ZPR-VISION-NAMESPACE"
+      namespace_id = "ZPR-VISION-NAMESPACE"
       validator_type = "ENUM"
       validator_values = ["hr-app", "payroll-app", "benefits-app"]
     }
