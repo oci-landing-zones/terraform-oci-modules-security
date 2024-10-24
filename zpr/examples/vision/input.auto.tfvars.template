@@ -1,0 +1,57 @@
+# Copyright (c) 2024 Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+# 1. Rename this file to <project-name>.auto.tfvars, where <project-name> is a name of your choice.
+# 2. Provide values for "Tenancy Connectivity Variables".
+# 3. Replace <REPLACE-BY-COMPARTMENT-OCID> placeholder by the appropriate compartment OCID.
+#--------------------------------------------------------------------------------------------------------------------------------------
+
+#---------------------------------------
+# Tenancy Connectivity Variables
+#---------------------------------------
+
+tenancy_ocid         = "<tenancy OCID>"             # Get this from OCI Console (after logging in, go to top-right-most menu item and click option "Tenancy: <your tenancy name>").
+user_ocid            = "<user OCID>"                # Get this from OCI Console (after logging in, go to top-right-most menu item and click option "My profile").
+fingerprint          = "<PEM key fingerprint>"      # The fingerprint can be gathered from your user account. In the "My profile page, click "API keys" on the menu in left hand side.
+private_key_path     = "<path to the private key>"  # This is the full path on your local system to the API signing private key.
+private_key_password = ""                           # This is the password that protects the private key, if any.
+region               = "<your tenancy region>"      # This is your region, where all other events are created. It can be the same as home_region.
+
+#---------------------------------------
+# Input variable
+#---------------------------------------
+zpr_configuration = {
+  default_defined_tags = null
+  default_freeform_tags = null
+
+  namespaces = {
+    ZPR-VISION-NAMESPACE = {
+      compartment_id = "<REPLACE-BY-COMPARTMENT-OCID>"
+      description = "Vision ZPR Security Attribute Namespace"
+      name = "zpr-vision-namespace"
+    }
+  }
+
+  security_attributes = {
+    SECURITY-ATTRIBUTE-APP = {
+      description = "Security attribute for zpr-vision-namespace applications"
+      name = "app-security-attribute"
+      namespace_id = "ZPR-VISION-NAMESPACE" 
+      validator_type = "ENUM"
+      validator_values = ["hr-app", "payroll-app", "benefits-app"]
+    }
+    SECURITY-ATTRIBUTE-DEFAULT = {
+      description = "Security attribute for default Oracle-ZPR namespace"
+      name = "default-security-attribute"
+    }
+  }
+
+  zpr_policies = {
+    ZPR-POLICY-1 = {
+      description = "ZPR policy"
+      name = "zpr-policy-1"
+      statements = ["in zpr-vision-namespace.app-security-attribute:hr-app VCN allow zpr-vision-namespace.app-security-attribute:hr-app endpoints to connect to osn-services-ip-addresses"]
+    }
+  }
+}
