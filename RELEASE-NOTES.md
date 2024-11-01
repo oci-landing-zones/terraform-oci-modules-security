@@ -1,3 +1,9 @@
+# November 01, 2024 Release Notes - 0.1.9
+
+## New
+1. [ZPR (Zero Trust Packet Routing)](./zpr/) module added.
+
+
 # September 23, 2024 Release Notes - 0.1.8
 
 ## Updates
