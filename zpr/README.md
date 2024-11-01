@@ -2,7 +2,7 @@
 
 ![Landing Zone logo](../landing_zone_300.png)
 
-This module manages Zero Trust Packet Routing in Oracle Cloud Infrastructure (OCI) based on a single configuration object. OCI ZPR enables organizations to set security attributes on resources and write natural language policies that limit network traffic based on the resources and data services accessed. 
+This module manages Zero Trust Packet Routing (ZPR) in Oracle Cloud Infrastructure (OCI) based on a single configuration object. OCI ZPR enables organizations to set security attributes on resources and write natural language policies that limit network traffic based on the resources and data services accessed. 
 
 Check [module specification](./SPEC.md) for a full description of module requirements, supported variables, managed resources and outputs.
 
@@ -103,7 +103,6 @@ The *zpr_policies* attribute supports the following attributes:
 - **statements**: An array of ZprPolicy statements (up to 25 statements per ZprPolicy) written in the Zero Trust Packet Routing Policy Language. [More Information](https://docs.oracle.com/en-us/iaas/Content/zero-trust-packet-routing/managing-zpr-policies.htm#zpr-policy-template-builder)
 - **defined_tags**: (Optional) the policy defined tags. *default_defined_tags* is used if undefined.
 - **freeform_tags**: (Optional) the policy freeform tags. *default_freeform_tags* is used if undefined.
-
 
 
 ## An Example

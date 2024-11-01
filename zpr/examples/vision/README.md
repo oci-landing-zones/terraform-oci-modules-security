@@ -1,9 +1,7 @@
 # OCI Zero Trust Packet Routing Module Example
 
 ## Introduction
-
-
-This example shows how to deploy ZPR resources in OCI using the [ZPR module](https://github.com/oci-landing-zones/terraform-oci-modules-security/tree/main/zpr).
+This example shows how to deploy ZPR resources in OCI using the [ZPR module](../..).
 
 It defines a security attribute namespace, two security attributes (one for the created namespace, one for the default oracle-zpr namespace), and a ZPR policy with one policy statement. 
 
