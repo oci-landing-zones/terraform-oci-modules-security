@@ -26,6 +26,7 @@ region               = "<your tenancy region>"      # This is your region, where
 
 cloud_guard_configuration = {
   reporting_region = "<REPLACE-BY-REPORTING-REGION-NAME>" # example: "us-ashburn-1". It defaults to tenancy home region if not provided.
+  ignore_existing_targets = false # Set to true to make the module skipping requested targets for which a target already exists.
   
   targets = {
     CLOUD-GUARD-TARGET-1 = {
