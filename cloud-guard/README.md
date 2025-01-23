@@ -56,12 +56,13 @@ For referring to a specific module version, append *ref=\<version\>* to the *sou
 ## <a name="functioning">Module Functioning</a>
 
 In this module, Cloud Guard settings are defined using the *cloud_guard_configuration* object, that supports the following attributes:
-- **default_defined_tags**: the default defined tags that are applied to all resources managed by this module. It can be overridden by *defined_tags* attribute in each resource.
-- **default_freeform_tags**: the default freeform tags that are applied to all resources managed by this module. It can be overridden by *freeform_tags* attribute in each resource.
-- **reporting_region**: the Cloud Guard reporting region, where all API calls, except reads, are made on. You can choose the reporting region among the available regions when enabling Cloud Guard. After Cloud Guard is enabled, you cannot change the reporting region without disabling and re-enabling Cloud Guard. Setting this attribute is required if Cloud Guard is enabled by this module. It defaults to tenancy home region if undefined.
-- **self_manage_resources**: whether Oracle managed resources are created by customers. Default: false.
-- **cloned_recipes_prefix**: a prefix to cloned recipe names. Default: "oracle-cloned-".
-- **targets**: the Cloud Guard targets.
+- **default_defined_tags**: (optional) the default defined tags that are applied to all resources managed by this module. It can be overridden by *defined_tags* attribute in each resource.
+- **default_freeform_tags**: (optional) the default freeform tags that are applied to all resources managed by this module. It can be overridden by *freeform_tags* attribute in each resource.
+- **reporting_region**: (optional) the Cloud Guard reporting region, where all API calls, except reads, are made on. You can choose the reporting region among the available regions when enabling Cloud Guard. After Cloud Guard is enabled, you cannot change the reporting region without disabling and re-enabling Cloud Guard. Setting this attribute is required if Cloud Guard is enabled by this module. It defaults to tenancy home region if undefined.
+- **self_manage_resources**: (optional) whether Oracle managed resources are created by customers. Default: false.
+- **cloned_recipes_prefix**: (optional) a prefix to cloned recipe names. Default: "oracle-cloned-".
+- **ignore_existing_targets**: (optional) whether to check if targets being requested already exist, a scenario that would make OCI to report an error during terraform apply, as only one target is allowed per target "COMPARTMENT" type. When set to true (default), the module ignores the particular requested target if there is already a target defined for the specific compartment.
+- **targets**: (optional) the Cloud Guard targets.
 
 **Note**: The module enables the Cloud Guard service in the tenancy if Cloud Guard is not enabled. **It will not disable Cloud Guard under any circumstances**. For disabling Cloud Guard, use the OCI Console.
 
@@ -70,19 +71,19 @@ In this module, Cloud Guard settings are defined using the *cloud_guard_configur
 Within *cloud_guard_configuration*, use the *targets* attribute to define Cloud Guard targets. Each target is defined as an object whose index name must be unique and must not be changed once defined. As a convention, use uppercase strings for the index names.
 
 The *targets* attribute supports the following attributes:
-- **name**: the target name.
-- **compartment_id**: the compartment where the target is created. It defaults to the value of *resource_id* if *resource_type* is "COMPARTMENT". This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
-- **resource_type**: the resource type that Cloud Guard monitors. Valid values: "COMPARTMENT", "FACLOUD". Default: "COMPARTMENT".
-- **resource_id**: the resource that Cloud Guard monitors. If the resource refers to a compartment, Cloud Guard monitors the compartment and all its subcompartments. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
-- **use_cloned_recipes**: whether the target should use clones of Oracle provided recipes. Default: false, which means targets use the Oracle provided recipes by default.  
-- **defined_tags**: the target defined tags. *default_defined_tags* is used if undefined.
-- **freeform_tags**: the target freeform tags. *default_freeform_tags* is used if undefined.
+- **name**: (required) the target name.
+- **resource_id**: (required) the resource that Cloud Guard monitors. If the resource refers to a compartment, Cloud Guard monitors the compartment and all its subcompartments. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
+- **compartment_id**: (optional) the compartment where the target is created. It defaults to the value of *resource_id* if *resource_type* is "COMPARTMENT". This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
+- **resource_type**: (optional) the resource type that Cloud Guard monitors. Valid values: "COMPARTMENT", "FACLOUD". Default: "COMPARTMENT".
+- **use_cloned_recipes**: (optional) whether the target should use clones of Oracle provided recipes. Default: false, which means targets use the Oracle provided recipes by default.  
+- **defined_tags**: (optional) the target defined tags. *default_defined_tags* is used if undefined.
+- **freeform_tags**: (optional) the target freeform tags. *default_freeform_tags* is used if undefined.
 
 **Note**: Regardless of using Oracle provided or cloned recipes, every Cloud Guard target gets configuration, activity and threat detector recipes as well as a responder recipe.
 
 ## An Example
 
-The following snippet enables Cloud Guard service (if not already enabled), setting Ashburn as the reporting region and defining two targets. Both targets monitor compartments under *resource_ocid* compartment and are created in *resource_ocid* compartment. First target (*CLOUD-GUARD-TARGET-1*) uses Oracle provided recipes while the second one (*CLOUD-GUARD-TARGET-2*) uses cloned recipes.
+The following snippet enables Cloud Guard service (if not already enabled), setting Ashburn as the reporting region and defining two targets. Both targets monitor compartments under *resource_id* compartment and are created in *resource_id* compartment. First target (*CLOUD-GUARD-TARGET-1*) uses Oracle provided recipes while the second one (*CLOUD-GUARD-TARGET-2*) uses cloned recipes.
 ```
 cloud_guard_configuration = {
   reporting_region = "us-ashburn-1" # It defaults to tenancy home region if undefined.
