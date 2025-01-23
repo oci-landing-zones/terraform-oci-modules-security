@@ -5,6 +5,10 @@ output "configuration" {
   value = module.vision_cloud_guard.configuration
 }
 
+output "ignored_requested_targets_because_they_already_exist" {
+  value = module.vision_cloud_guard.ignored_targets
+}
+
 /*output "targets" {
   value = module.vision_cloud_guard.targets
 }

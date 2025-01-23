@@ -9,9 +9,24 @@ locals {
   is_cloud_guard_enabled = data.oci_cloud_guard_cloud_guard_configuration.this.status == "ENABLED" ? true : length(oci_cloud_guard_cloud_guard_configuration.this) > 0 ? (oci_cloud_guard_cloud_guard_configuration.this[0].status == "ENABLED" ? true : false) : false
   cloned_recipes_prefix = var.cloud_guard_configuration != null ? (var.cloud_guard_configuration.cloned_recipes_prefix != null ? var.cloud_guard_configuration.cloned_recipes_prefix : "oracle-cloned") : ""
   
-  is_create_cloned_recipes = length(flatten([
-    for target_value in (var.cloud_guard_configuration != null ? (var.cloud_guard_configuration.targets != null ? var.cloud_guard_configuration.targets : {}) : {}) : [target_value.use_cloned_recipes]
-  if coalesce(target_value.use_cloned_recipes,false) == true ])) > 0
+  ### Looking up existing targets
+  # These are the already existing targets for the compartments being requested as targets in the module input.
+  # We do this to avoid Terraform erroring out during apply when a target already exists for the compartment being requested as target.
+  existing_flattened_targets = { for k, v in data.oci_cloud_guard_targets.these: k => [for target in flatten(v.target_collection[0].items) : target if target.target_resource_type == "COMPARTMENT"] if length(v.target_collection[0].items) > 0} # there's only one "COMPARTMENT" target per compartment.
+  existing_targets = { for k, v in local.existing_flattened_targets: k => {name: v[0].display_name, compartment_id: v[0].compartment_id} if length(v) > 0}
+  
+  # actual_targets are the targets to be provisioned. It ignores existing_targets (i.e., requested targets for compartments when there is already an existing target), 
+  # except when the existing target has the same name being given, which *very likely* means the target was created by the same Terraform config. 
+  # When the given target has a different name than the existing target, provisioning will fail because another target would already exist.
+  actual_targets = {for k, v in try(var.cloud_guard_configuration.targets,{}): k => v if !contains(keys(local.existing_targets),k) || try(local.existing_targets[k].name,"") == v.name}
+
+  ignored_targets = var.cloud_guard_configuration.ignore_existing_targets ? {for k, v in try(var.cloud_guard_configuration.targets,{}): k => v if !contains(keys(local.actual_targets),k)} : null
+  ### End of Looking up existing targets
+
+  targets = var.cloud_guard_configuration.ignore_existing_targets ? local.actual_targets : try(var.cloud_guard_configuration.targets,{})
+  
+  is_create_cloned_recipes = length(flatten([for target_value in local.targets : [target_value.use_cloned_recipes] if coalesce(target_value.use_cloned_recipes,false) == true ])) > 0
+
 }
 
 resource "oci_cloud_guard_cloud_guard_configuration" "this" {
@@ -23,7 +38,7 @@ resource "oci_cloud_guard_cloud_guard_configuration" "this" {
 }
 
 resource "oci_cloud_guard_target" "these" {
-  for_each = var.cloud_guard_configuration != null ? (var.cloud_guard_configuration.targets != null ? var.cloud_guard_configuration.targets : {}) : {}
+  for_each = local.targets # var.cloud_guard_configuration != null ? (var.cloud_guard_configuration.targets != null ? var.cloud_guard_configuration.targets : {}) : {}
     #-- If target_resource_type is null or target_resource_type == "COMPARTMENT", the compartment_id defaults to target_resource_id.
     compartment_id       = each.value.resource_type != null ? (each.value.resource_type == "COMPARTMENT" ? (length(regexall("^ocid1.*$", each.value.resource_id)) > 0 ? each.value.resource_id : (upper(each.value.resource_id) == "TENANCY-ROOT" ? var.tenancy_ocid : var.compartments_dependency[each.value.resource_id].id)) : (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : (upper(each.value.compartment_id) == "TENANCY-ROOT" ? var.tenancy_ocid : var.compartments_dependency[each.value.compartment_id].id))) : (length(regexall("^ocid1.*$", each.value.resource_id)) > 0 ? each.value.resource_id : (upper(each.value.resource_id) == "TENANCY-ROOT" ? var.tenancy_ocid : var.compartments_dependency[each.value.resource_id].id))
     display_name         = each.value.name
