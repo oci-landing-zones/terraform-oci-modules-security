@@ -1,3 +1,9 @@
+# January 23, 2025 Release Notes - 0.2.0
+
+## Updates
+1. By default [Cloud Guard module](./cloud-guard/) will not attempt to provision a target if a target already exists for the requested compartment. This is controlled by the attribute *ignore_existing_targets*, whose default value is *true*. Such an attempt would generate an error in Terraform, as only one user-defined target is allowed per compartment. The error can be let to occur by setting the attribute to *false*.
+
+
 # November 01, 2024 Release Notes - 0.1.9
 
 ## New

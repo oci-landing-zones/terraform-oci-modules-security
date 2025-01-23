@@ -30,3 +30,15 @@ output "cloned_responder_recipe" {
   description = "Cloned Cloud Guard responder recipe."
   value = var.enable_output ? (length(oci_cloud_guard_responder_recipe.responder_cloned) > 0 ? oci_cloud_guard_responder_recipe.responder_cloned[0] : null) : null
 }
+
+output "existing_targets" {
+  value = var.enable_output ? local.existing_targets : null
+}
+
+output "actual_targets" {
+  value = var.enable_output ? local.actual_targets : null
+}
+
+output "ignored_targets" {
+  value = var.enable_output ? local.ignored_targets : null
+}
