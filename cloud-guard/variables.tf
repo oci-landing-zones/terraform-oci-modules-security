@@ -9,7 +9,7 @@ variable "cloud_guard_configuration" {
     reporting_region = optional(string) # the reporting region. It defaults to tenancy home region if undefined.
     self_manage_resources = optional(bool) # whether Oracle managed resources are created by customers. Default: false.
     cloned_recipes_prefix = optional(string) # a prefix to add to cloned recipes. Default: "oracle-cloned-".
-    ignore_existing_targets = optional(bool, false) # whether to check if targets being requested already exist, a scenario that would make OCI to report an error during terraform apply, as only one target is allowed per target "COMPARTMENT" type. Default is false. When set to true, the module ignores the particular requested target if there is already a target defined for the specific compartment.
+    ignore_existing_targets = optional(bool, true) # whether to check if targets being requested already exist, a scenario that would make OCI to report an error during terraform apply, as only one target is allowed per target "COMPARTMENT" type. When set to true (default), the module ignores the particular requested target if there is already a target defined for the specific compartment.
     
     targets = optional(map(object({ # the Cloud Guard targets.
       compartment_id = optional(string) # the compartment where the Cloud Guard is created. It can be either the compartment OCID or a reference (a key) to the compartment OCID. It defaults to resource_id if resource_type is "COMPARTMENT".
