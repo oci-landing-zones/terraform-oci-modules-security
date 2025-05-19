@@ -32,6 +32,13 @@ variable "vaults_configuration" {
       defined_tags = optional(map(string)) # key freeform_tags. The vault freeform_tags is used if undefined.
       freeform_tags = optional(map(string)) # key freeform_tags. The vault freeform_tags is used if undefined.
       versions = optional(list(string)) # a list of strings representing key versions. Use this to rotate keys.
+      last_rotation_message = optional(string)
+      last_rotation_status = optional(string)
+      rotation_interval_in_days = optional(number)
+      time_of_last_rotation = optional(string)
+      time_of_next_rotation = optional(string)
+      time_of_schedule_start = optional(string)
+      is_auto_rotation_enabled = optional(bool)
     })))
 
     existing_keys_grants = optional(map(object({ # Use this attribute to create IAM policies for existing keys if needed
