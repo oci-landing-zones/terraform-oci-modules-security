@@ -13,6 +13,15 @@ allow group <group> to read objectstorage-namespaces in tenancy
 allow group <group> to read buckets in compartment <bucket-compartment-name>
 allow group <group> to read objects in compartment <bucket-compartment-name> where target.bucket.name = '<bucket-name>'
 ```
+Note: If deploying Cloud Guard in a stand alone case (without Core), this module requires the permissions below.
+
+```
+allow service cloudguard to manage cloudevents-rules in tenancy where target.rule.type='managed'
+allow service cloudguard to use network-security-groups in tenancy
+allow service cloudguard to read all-resources in tenancy
+
+```
+
 
 ## Using this example
 1. Rename *input.auto.tfvars.template* to *\<project-name\>.auto.tfvars*, where *\<project-name\>* is any name of your choice.
