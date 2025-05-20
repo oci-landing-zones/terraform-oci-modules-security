@@ -28,6 +28,14 @@ This module requires the following OCI IAM permission:
 ```
 allow group <group> to manage cloud-guard-family in tenancy
 ```
+Note: If deploying Cloud Guard in a stand alone case (without Core), this module requires the permissions below.
+
+```
+allow service cloudguard to manage cloudevents-rules in tenancy where target.rule.type='managed'
+allow service cloudguard to use network-security-groups in tenancy
+allow service cloudguard to read all-resources in tenancy
+
+```
 
 ## <a name="invoke">How to Invoke the Module</a>
 
