@@ -13,7 +13,7 @@ allow group <group> to read objectstorage-namespaces in tenancy
 allow group <group> to read buckets in compartment <bucket-compartment-name>
 allow group <group> to read objects in compartment <bucket-compartment-name> where target.bucket.name = '<bucket-name>'
 ```
-Note: If deploying Cloud Guard in a stand alone case (without Core), this module requires the permissions below.
+Note: If deploying Cloud Guard in a stand alone case (without [OCI Core Landing Zone](https://github.com/oci-landing-zones/terraform-oci-core-landingzone)), this module requires the permissions below.
 
 ```
 allow service cloudguard to manage cloudevents-rules in tenancy where target.rule.type='managed'
