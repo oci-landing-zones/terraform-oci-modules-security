@@ -36,7 +36,6 @@ allow service cloudguard to use network-security-groups in tenancy
 allow service cloudguard to read all-resources in tenancy
 
 ```
-
 ## <a name="invoke">How to Invoke the Module</a>
 
 Terraform modules can be invoked locally or remotely. 
