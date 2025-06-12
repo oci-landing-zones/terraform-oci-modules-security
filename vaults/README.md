@@ -95,6 +95,13 @@ The *keys* attribute supports the following attributes:
 - **versions**: a list of strings representing key versions. Use this to rotate keys.
 - **defined_tags**: the key defined_tags. *default_defined_tags* is used if undefined.
 - **freeform_tags**: the key freeform_tags. *default_freeform_tags* is used if undefined.
+- **is_auto_rotation_enabled**: A parameter specifying whether the auto key rotation is enabled or not. Note that, currently the auto key rotation is only available when using "VIRTUAL_PRIVATE" vault.
+- **last_rotation_message**: The last execution status message of auto key rotation.
+- **last_rotation_status**: The status of last execution of auto key rotation.
+- **rotation_interval_in_days**: The interval of auto key rotation. For auto key rotation the interval should between 60 day and 365 days (1 year). Note: User must specify this parameter when creating a new schedule.
+- **time_of_last_rotation**: A property indicating last rotation date. Example: 2023-04-04T00:00:00Z.
+- **time_of_next_rotation**: A property indicating next estimated scheduled time, as per the interval, expressed as date YYYY-MM-DD String. Example: 2023-04-04T00:00:00Z.
+- **time_of_schedule_start**: A property indicating scheduled start date expressed as date YYYY-MM-DD String. Example: 2023-04-04T00:00:00Z.
 
 ### Defining Grants for Existing Keys
 

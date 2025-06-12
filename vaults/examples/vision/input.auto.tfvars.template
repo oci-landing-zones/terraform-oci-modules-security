@@ -45,6 +45,14 @@ vaults_configuration = {
       vault_key = "VISION-VAULT"
       service_grantees = ["blockstorage"]
       group_grantees = ["vision-appdev-admin-group"]
+      # Auto Key Rotation is available if your vault is a VPV (virtual private vault)
+      # is_auto_rotation_enabled = true
+      # last_rotation_message = "<REPLACE-BY-LAST-ROTATION-MESSAGE>"
+      # last_rotation_status = "<REPLACE-BY-LAST-ROTATION-STATUS>"
+      # rotation_interval_in_days = 70 # range 60-365
+      # time_of_last_rotation = "<REPLACE-BY-LAST-ROTATION-TIME>" # Example: 2023-04-04T00:00:00Z.
+      # time_of_next_rotation = "<REPLACE-BY-NEXT-ROTATION-TIME>" # Example: 2023-04-04T00:00:00Z.
+      # time_of_schedule_start = "<REPLACE-BY-ROTATION-TIME-START>" # Example: 2023-04-04T00:00:00Z.
     }
   }
 }
