@@ -1,3 +1,9 @@
+# June 12, 2025 Release Notes - 0.2.1
+
+## Updates
+1. Cloud-guard [README.md](./cloud-guard/README.md) updated to include required permissions for using cloud-guard in a stand alone case (without [OCI Core Landing Zone](https://github.com/oci-landing-zones/terraform-oci-core-landingzone)).
+
+
 # January 23, 2025 Release Notes - 0.2.0
 
 ## Updates
