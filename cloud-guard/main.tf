@@ -12,7 +12,8 @@ locals {
   ### Looking up existing targets
   # These are the already existing targets for the compartments being requested as targets in the module input.
   # We do this to avoid Terraform erroring out during apply when a target already exists for the compartment being requested as target.
-  existing_flattened_targets = { for k, v in data.oci_cloud_guard_targets.these: k => [for target in flatten(v.target_collection[0].items) : target if target.target_resource_type == "COMPARTMENT"] if length(v.target_collection[0].items) > 0} # there's only one "COMPARTMENT" target per compartment.
+  existing_flattened_targets = { for k in keys(try(var.cloud_guard_configuration.targets,{})) : k => [for target in flatten(data.oci_cloud_guard_targets.these[k].target_collection[0].items) : target if target.target_resource_type == "COMPARTMENT"] if length(data.oci_cloud_guard_targets.these[k].target_collection[0].items) > 0} # there's only one "COMPARTMENT" target per compartment.
+  #existing_flattened_targets = { for k, v in data.oci_cloud_guard_targets.these: k => [for target in flatten(v.target_collection[0].items) : target if target.target_resource_type == "COMPARTMENT"] if length(v.target_collection[0].items) > 0} # there's only one "COMPARTMENT" target per compartment.
   existing_targets = { for k, v in local.existing_flattened_targets: k => {name: v[0].display_name, compartment_id: v[0].compartment_id} if length(v) > 0}
   
   # actual_targets are the targets to be provisioned. It ignores existing_targets (i.e., requested targets for compartments when there is already an existing target), 
