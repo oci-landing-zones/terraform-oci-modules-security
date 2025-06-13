@@ -3,7 +3,7 @@
 
 output configuration {
   description = "Cloud Guard configuration information."
-  value = var.enable_output ? (length(oci_cloud_guard_cloud_guard_configuration.this) > 0 ? oci_cloud_guard_cloud_guard_configuration.this[0] : null) : null
+  value = var.enable_output ? (length(oci_cloud_guard_cloud_guard_configuration.this) > 0 ? oci_cloud_guard_cloud_guard_configuration.this : null) : null
 }
 
 output targets {

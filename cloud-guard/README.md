@@ -51,13 +51,13 @@ module "cloud_guard" {
 For invoking the module remotely, set the module *source* attribute to the Cloud Guard module folder in this repository, as shown:
 ```
 module "cloud_guard" {
-  source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/cloud-guard"
+  source = "github.com/oci-landing-zones/terraform-oci-modules-security/cloud-guard"
   cloud_guard_configuration = var.cloud_guard_configuration
 }
 ```
 For referring to a specific module version, append *ref=\<version\>* to the *source* attribute value, as in:
 ```
-  source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security//cloud_guard?ref=v0.1.0"
+  source = "github.com/oci-landing-zones/terraform-oci-modules-security//cloud_guard?ref=v0.1.0"
 ```
 
 ## <a name="functioning">Module Functioning</a>

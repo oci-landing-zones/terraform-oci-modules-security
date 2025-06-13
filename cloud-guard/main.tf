@@ -6,7 +6,7 @@ locals {
   home_region_key = data.oci_identity_tenancy.this.home_region_key # Home region key obtained from the tenancy data source
   home_region     = local.regions_map[local.home_region_key]
 
-  is_cloud_guard_enabled = data.oci_cloud_guard_cloud_guard_configuration.this.status == "ENABLED" ? true : length(oci_cloud_guard_cloud_guard_configuration.this) > 0 ? (oci_cloud_guard_cloud_guard_configuration.this[0].status == "ENABLED" ? true : false) : false
+  #is_cloud_guard_enabled = data.oci_cloud_guard_cloud_guard_configuration.this.status == "ENABLED" ? true : length(oci_cloud_guard_cloud_guard_configuration.this) > 0 ? (oci_cloud_guard_cloud_guard_configuration.this[0].status == "ENABLED" ? true : false) : false
   cloned_recipes_prefix = var.cloud_guard_configuration != null ? (var.cloud_guard_configuration.cloned_recipes_prefix != null ? var.cloud_guard_configuration.cloned_recipes_prefix : "oracle-cloned") : ""
   
   ### Looking up existing targets
@@ -30,7 +30,7 @@ locals {
 }
 
 resource "oci_cloud_guard_cloud_guard_configuration" "this" {
-  count = data.oci_cloud_guard_cloud_guard_configuration.this.status == "DISABLED" ? 1 : 0 # we only manage this resource if Cloud Guard is currently disabled, which means we have to enable it.
+  #count = data.oci_cloud_guard_cloud_guard_configuration.this.status == "DISABLED" ? 1 : 0 # we only manage this resource if Cloud Guard is currently disabled, which means we have to enable it.
     compartment_id        = var.tenancy_ocid
     reporting_region      = coalesce(var.cloud_guard_configuration.reporting_region, local.home_region)
     status                = "ENABLED"

@@ -7,10 +7,6 @@ data "oci_identity_tenancy" "this" {
   tenancy_id = var.tenancy_ocid
 }
 
-data "oci_cloud_guard_cloud_guard_configuration" "this" {
-  compartment_id = var.cloud_guard_configuration != null ? var.tenancy_ocid : "__void__"
-}
-
 data "oci_cloud_guard_detector_recipes" "configuration" {
   depends_on = [oci_cloud_guard_cloud_guard_configuration.this]  
   compartment_id = var.cloud_guard_configuration != null ? var.tenancy_ocid : "__void__"
