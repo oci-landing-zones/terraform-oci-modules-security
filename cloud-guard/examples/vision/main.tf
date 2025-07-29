@@ -2,8 +2,8 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 module "vision_cloud_guard" {
-  source = "../.."
+  source                    = "../.."
   cloud_guard_configuration = var.cloud_guard_configuration
-  tenancy_ocid = var.tenancy_ocid
-  enable_output = true
+  tenancy_ocid              = var.tenancy_ocid
+  enable_output             = true
 }

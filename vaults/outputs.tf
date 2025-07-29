@@ -3,20 +3,20 @@
 
 output "vaults" {
   description = "The vaults."
-  value = var.enable_output ? oci_kms_vault.these : null
+  value       = var.enable_output ? oci_kms_vault.these : null
 }
 
 output "keys" {
   description = "The keys."
-  value = var.enable_output ? oci_kms_key.these : null
+  value       = var.enable_output ? oci_kms_key.these : null
 }
 
 output "keys_versions" {
   description = "The keys versions."
-  value = var.enable_output ? oci_kms_key_version.these : null
+  value       = var.enable_output ? oci_kms_key_version.these : null
 }
 
 output "policies" {
   description = "The policies."
-  value = var.enable_output ? merge(oci_identity_policy.managed_keys, oci_identity_policy.existing_keys) : null
+  value       = var.enable_output ? merge(oci_identity_policy.managed_keys, oci_identity_policy.existing_keys) : null
 }

@@ -3,6 +3,6 @@
 
 module "vision_scanning" {
   #source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/vss"
-  source = "../.."
+  source                 = "../.."
   scanning_configuration = var.scanning_configuration
 }
