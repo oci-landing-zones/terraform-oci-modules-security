@@ -4,7 +4,7 @@
 module "vision_vaults" {
   source = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/vaults"
   providers = {
-    oci = oci
+    oci      = oci
     oci.home = oci.home
   }
   vaults_configuration = var.vaults_configuration

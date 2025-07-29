@@ -8,5 +8,5 @@ output "bastions" {
 
 output "sessions" {
   description = "The bastion sessions connection string."
-  value = var.enable_output ? {for k, v in oci_bastion_session.these : k => v.ssh_metadata["command"]} : null
+  value       = var.enable_output ? { for k, v in oci_bastion_session.these : k => v.ssh_metadata["command"] } : null
 }
