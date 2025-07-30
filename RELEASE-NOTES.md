@@ -1,7 +1,7 @@
 # July 24, 2025 Release Notes - 0.2.2
 
 ## Updates
-1. Formatted the code to adhere to Terraform standards
+1. Formatted the code to adhere to Terraform standards.
 
 # June 12, 2025 Release Notes - 0.2.1
 
