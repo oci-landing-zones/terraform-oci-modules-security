@@ -5,7 +5,7 @@ resource "oci_bastion_bastion" "these" {
   for_each = var.bastions_configuration != null ? var.bastions_configuration["bastions"] : {}
   lifecycle {
     ## Check 1: Check if the value of the session time to live.
-        precondition {
+    precondition {
       condition     = each.value.max_session_ttl_in_seconds != null ? each.value.max_session_ttl_in_seconds < 1800 || each.value.max_session_ttl_in_seconds > 10800 ? false : true : true
       error_message = "VALIDATION FAILURE in bastion \"${each.key}\": the session time to live must be between 1800s(30min) and 10800s(3h). Please change the \"max_session_ttl_in_seconds\" attribute value."
     }
