@@ -2,6 +2,7 @@
 
 ## Updates
 1. Formatted the code to adhere to Terraform standards.
+2. Added support for key creation with DEFAULT vault type [README.md](./valuts/README.md)
 
 # June 12, 2025 Release Notes - 0.2.1
 
