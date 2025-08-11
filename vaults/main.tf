@@ -70,18 +70,18 @@ resource "oci_kms_key" "these" {
     length    = coalesce(each.value.length, 32)
     curve_id  = each.value.curve_id
   }
-  dynamic "auto_key_rotation_details" {
-    for_each = each.value.is_auto_rotation_enabled == true ? [each.value] : []
+  dynamic auto_key_rotation_details {
+    for_each = each.value.is_auto_rotation_enabled == true && var.vaults_configuration.vaults[each.value.vault_key].type == "VIRTUAL_PRIVATE" ? [each.value] : []
     content {
-      last_rotation_message     = each.last_rotation_message
-      last_rotation_status      = each.last_rotation_status
-      rotation_interval_in_days = each.rotation_interval_in_days
-      time_of_last_rotation     = each.time_of_last_rotation
-      time_of_next_rotation     = each.time_of_next_rotation
-      time_of_schedule_start    = each.time_of_schedule_start
+      last_rotation_message = each.value.last_rotation_message
+      last_rotation_status = each.value.last_rotation_status
+      rotation_interval_in_days = each.value.rotation_interval_in_days
+      time_of_last_rotation = each.value.time_of_last_rotation
+      time_of_next_rotation = each.value.time_of_next_rotation
+      time_of_schedule_start = each.value.time_of_schedule_start
     }
   }
-  is_auto_rotation_enabled = each.value.is_auto_rotation_enabled != null ? each.value.is_auto_rotation_enabled : false
+  is_auto_rotation_enabled = var.vaults_configuration.vaults[each.value.vault_key].type == "VIRTUAL_PRIVATE" && each.value.is_auto_rotation_enabled != null ? each.value.is_auto_rotation_enabled : false
   defined_tags             = each.value.defined_tags != null ? each.value.defined_tags : var.vaults_configuration.default_defined_tags
   freeform_tags            = merge(local.cislz_module_tag, each.value.freeform_tags != null ? each.value.freeform_tags : var.vaults_configuration.default_freeform_tags)
 }
