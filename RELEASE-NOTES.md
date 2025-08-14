@@ -1,8 +1,8 @@
-# August 4, 2025 Release Notes - 0.2.2
+# August 15, 2025 Release Notes - 0.2.2
 
 ## Updates
 1. Formatted the code to adhere to Terraform standards.
-2. Added support for key creation with DEFAULT vault type [README.md](./vaults/README.md)
+2. Updated automatic key rotation configuration for virtual private vaults.
 
 # June 12, 2025 Release Notes - 0.2.1
 
