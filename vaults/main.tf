@@ -71,7 +71,7 @@ resource "oci_kms_key" "these" {
     curve_id  = each.value.curve_id
   }
   dynamic "auto_key_rotation_details" {
-    for_each = each.value.is_auto_rotation_enabled == true && var.vaults_configuration.vaults[each.value.vault_key].type == "VIRTUAL_PRIVATE" ? [each.value] : []
+    for_each = each.value.is_auto_rotation_enabled == true && var.vaults_configuration.vaults[each.value.vault_key].type == "VIRTUAL_PRIVATE" ? [1] : []
     content {
       last_rotation_message     = each.value.last_rotation_message
       last_rotation_status      = each.value.last_rotation_status
