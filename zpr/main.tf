@@ -7,7 +7,7 @@ resource "oci_zpr_configuration" "this" {
 }
 
 resource "time_sleep" "wait_after_zpr_configuration" {
-  depends_on = [oci_zpr_configuration.this]
+  depends_on      = [oci_zpr_configuration.this]
   create_duration = "30s"
 }
 
@@ -21,22 +21,22 @@ resource "oci_security_attribute_security_attribute_namespace" "these" {
   defined_tags  = each.value.defined_tags != null ? each.value.defined_tags : var.zpr_configuration.default_defined_tags
   freeform_tags = each.value.freeform_tags != null ? each.value.freeform_tags : var.zpr_configuration.default_freeform_tags
 
-  depends_on    = [time_sleep.wait_after_zpr_configuration]
+  depends_on = [time_sleep.wait_after_zpr_configuration]
 }
 
 resource "oci_security_attribute_security_attribute" "these" {
-  for_each                        = var.zpr_configuration.security_attributes != null ? var.zpr_configuration.security_attributes : {}
-  description                     = each.value.description
-  name                            = each.value.name
+  for_each    = var.zpr_configuration.security_attributes != null ? var.zpr_configuration.security_attributes : {}
+  description = each.value.description
+  name        = each.value.name
 
   security_attribute_namespace_id = each.value.namespace_id != null ? (
     length(regexall("^ocid1.*$", each.value.namespace_id)) > 0 ? (
-      each.value.namespace_id ) : (
-      contains(keys(oci_security_attribute_security_attribute_namespace.these), each.value.namespace_id) ) ? (
-          oci_security_attribute_security_attribute_namespace.these[each.value.namespace_id].id ) : (
-              data.oci_security_attribute_security_attribute_namespaces.query_security_attribute_namespaces[each.key].security_attribute_namespaces[0].id)) : (
-      data.oci_security_attribute_security_attribute_namespaces.default_security_attribute_namespaces.security_attribute_namespaces[0].id
-      )
+      each.value.namespace_id) : (
+      contains(keys(oci_security_attribute_security_attribute_namespace.these), each.value.namespace_id)) ? (
+      oci_security_attribute_security_attribute_namespace.these[each.value.namespace_id].id) : (
+    data.oci_security_attribute_security_attribute_namespaces.query_security_attribute_namespaces[each.key].security_attribute_namespaces[0].id)) : (
+    data.oci_security_attribute_security_attribute_namespaces.default_security_attribute_namespaces.security_attribute_namespaces[0].id
+  )
 
   dynamic "validator" {
     for_each = each.value.validator_type == "ENUM" ? [1] : []
@@ -46,7 +46,7 @@ resource "oci_security_attribute_security_attribute" "these" {
     }
   }
 
-  depends_on    = [time_sleep.wait_after_zpr_configuration]
+  depends_on = [time_sleep.wait_after_zpr_configuration]
 }
 
 resource "oci_zpr_zpr_policy" "these" {
@@ -59,5 +59,5 @@ resource "oci_zpr_zpr_policy" "these" {
   defined_tags  = each.value.defined_tags != null ? each.value.defined_tags : var.zpr_configuration.default_defined_tags
   freeform_tags = each.value.freeform_tags != null ? each.value.freeform_tags : var.zpr_configuration.default_freeform_tags
 
-  depends_on    = [time_sleep.wait_after_zpr_configuration]
+  depends_on = [time_sleep.wait_after_zpr_configuration]
 }
