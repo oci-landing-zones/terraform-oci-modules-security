@@ -1,8 +1,8 @@
-# August 15, 2025 Release Notes - 0.2.2
+# August 20, 2025 Release Notes - 0.2.2
 
 ## Updates
-1. Formatted the code to adhere to Terraform standards.
-2. Updated automatic key rotation configuration for virtual private vaults.
+1. Updated automatic key rotation configuration for virtual private vaults.
+2. Formatted the code to adhere to Terraform standards.
 
 # June 12, 2025 Release Notes - 0.2.1
 
