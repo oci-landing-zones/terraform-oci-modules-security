@@ -9,10 +9,10 @@ variable "private_key_path" { default = "" }
 variable "private_key_password" { default = "" }
 
 variable "bastions_configuration" {
-  type = any
+  type    = any
   default = null
 }
 variable "sessions_configuration" {
-  type = any
+  type    = any
   default = null
 }

@@ -2,21 +2,21 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 variable "tenancy_ocid" {}
-variable "region" {description = "Your tenancy region"}
-variable "user_ocid" {default = ""}
-variable "fingerprint" {default = ""}
-variable "private_key_path" {default = ""}
-variable "private_key_password" {default = ""}
+variable "region" { description = "Your tenancy region" }
+variable "user_ocid" { default = "" }
+variable "fingerprint" { default = "" }
+variable "private_key_path" { default = "" }
+variable "private_key_password" { default = "" }
 
 variable "cloud_guard_configuration" {
-  type = any
+  type    = any
   default = null
 }
 
 variable "oci_compartments_dependency" {
   type = object({
     bucket = string
-    object = string 
+    object = string
   })
   default = null
 }
