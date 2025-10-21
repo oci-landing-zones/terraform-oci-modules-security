@@ -22,6 +22,7 @@ variable "vaults_configuration" {
       compartment_id            = optional(string)       # the compartment where the key is created. The vault compartment_id is used if undefined. It can be either a compartment OCID or a reference (a key) to the compartment OCID.
       name                      = string                 # key name.
       vault_key                 = optional(string)       # the index name (key) in the vaults attribute where this key belongs to.
+      vault_id                  = optional(string)       # the vault OCID or key. 
       vault_management_endpoint = optional(string)       # the vault management endpoint where this key belongs to. If provided, this value takes precedence over vault_key. Use this attribute to add this key to a Vault that is managed elsewhere. It can be assigned either a literal endpoint URL or a reference (a key) to an endpoint URL.
       algorithm                 = optional(string)       # key encryption algorithm. Valid values: "AES", "RSA", and "ECDSA". Defaults is "AES". 
       length                    = optional(number)       # key length in bytes. "AES" lengths: 16, 24, 32. "RSA" lengths: 256, 384, 512. ECDSA lengths: 32, 48, 66. Default is 32.
@@ -62,7 +63,8 @@ variable "compartments_dependency" {
 variable "vaults_dependency" {
   description = "A map of objects containing the externally managed vaults this module may depend on. All map objects must have the same type and must contain at least a 'management_endpoint' attribute (representing the management endpoint URL) of string type."
   type = map(object({
-    management_endpoint = string # the vault management endpoint URL.
+    management_endpoint = optional(string) # the vault management endpoint URL.
+    id = optional(string) # the vault OCID
   }))
   default = null
 }

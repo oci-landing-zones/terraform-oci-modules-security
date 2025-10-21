@@ -4,7 +4,7 @@
 locals {
 
   keys_policies = flatten([
-    for key_key, key_value in(var.vaults_configuration != null ? (var.vaults_configuration.keys != null ? var.vaults_configuration.keys : {}) : {}) : {
+    for key_key, key_value in try(var.vaults_configuration.keys,{}) : {
       key            = key_key
       compartment_id = key_value.compartment_id != null ? (length(regexall("^ocid1.*$", key_value.compartment_id)) > 0 ? key_value.compartment_id : var.compartments_dependency[key_value.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id)
       name           = "${key_value.name}-policy"
@@ -17,7 +17,7 @@ locals {
   ])
 
   keys_versions = flatten([
-    for key_key, key_value in(var.vaults_configuration != null ? (var.vaults_configuration.keys != null ? var.vaults_configuration.keys : {}) : {}) : [
+    for key_key, key_value in try(var.vaults_configuration.keys,{}) : [
       for version in(key_value.versions != null ? key_value.versions : []) : {
         key_key     = key_key
         version_key = "${key_key}.${version}"
@@ -26,18 +26,25 @@ locals {
   ])
 
   algorithms = ["AES", "RSA", "ECDSA"]
+
+  vault_ids = { for k, v in try(var.vaults_configuration.keys,{}) : k => {"id":v.vault_id,"key":v.vault_key} if v.vault_id != null }
+}
+
+data "oci_kms_vault" "these" {
+  for_each = local.vault_ids
+    vault_id = length(regexall("^ocid1.*$", each.value.id)) > 0 ? each.value.id : var.vaults_dependency[try(each.value.key,each.value.id)].id
 }
 
 #-- Used for retrieving the compartment name to use in policy statements
 data "oci_identity_compartment" "managed_keys" {
   provider = oci.home
-  for_each = { for k, v in(var.vaults_configuration != null ? (var.vaults_configuration.keys != null ? var.vaults_configuration.keys : {}) : {}) : k => { compartment_id = v.compartment_id != null ? (length(regexall("^ocid1.*$", v.compartment_id)) > 0 ? v.compartment_id : var.compartments_dependency[v.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id) } }
+  for_each = { for k, v in try(var.vaults_configuration.keys,{}) : k => { compartment_id = v.compartment_id != null ? (length(regexall("^ocid1.*$", v.compartment_id)) > 0 ? v.compartment_id : var.compartments_dependency[v.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id) } }
   id       = each.value.compartment_id
 }
 
 resource "oci_kms_vault" "these" {
   provider       = oci
-  for_each       = var.vaults_configuration != null ? (var.vaults_configuration.vaults != null ? var.vaults_configuration.vaults : {}) : {}
+  for_each       = try(var.vaults_configuration.vaults,{})
   compartment_id = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id)
   display_name   = each.value.name
   vault_type     = upper(coalesce(each.value.type, "DEFAULT"))
@@ -56,22 +63,23 @@ resource "oci_kms_key" "these" {
       error_message = "VALIDATION FAILURE : \"${upper(coalesce(each.value.algorithm, "AES"))}\" value is invalid for \"algorithm\" attribute in ${each.key} key definition. Valid values are ${join(", ", local.algorithms)} (case insensitive)."
     }
     precondition {
-      condition     = each.value.vault_key != null || each.value.vault_management_endpoint != null
-      error_message = "VALIDATION FAILURE : either vault_key or vault_management_endpoint must be provided. Otherwise it is not possible to know which vault the key belongs to."
+      condition     = each.value.vault_key != null || each.value.vault_management_endpoint != null || each.value.vault_id != null
+      error_message = "VALIDATION FAILURE : either vault_key, vault_management_endpoint or vault_id must be provided. Otherwise it is not possible to know which vault the key belongs to."
     }
   }
-  for_each            = var.vaults_configuration != null ? (var.vaults_configuration.keys != null ? var.vaults_configuration.keys : {}) : {}
+  for_each            = try(var.vaults_configuration.keys,{})
   compartment_id      = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id)
   display_name        = each.value.name
-  management_endpoint = each.value.vault_management_endpoint != null ? length(regexall("^https://.*$", each.value.vault_management_endpoint)) > 0 ? each.value.vault_management_endpoint : var.vaults_dependency[each.value.vault_management_endpoint].management_endpoint : oci_kms_vault.these[each.value.vault_key].management_endpoint
+  management_endpoint = length(regexall("^https://.*$", coalesce(each.value.vault_management_endpoint,"__VOID__"))) > 0 ? each.value.vault_management_endpoint : (contains(keys(oci_kms_vault.these),coalesce(each.value.vault_key,each.value.vault_id,"__VOID__")) ? oci_kms_vault.these[coalesce(each.value.vault_key,each.value.vault_id,"__VOID__")].management_endpoint : (var.vaults_dependency != null ? var.vaults_dependency[coalesce(each.value.vault_key,each.value.vault_id,"__VOID__")].management_endpoint : "__VOID__"))
   protection_mode     = upper(coalesce(each.value.protection_mode, "HSM"))
   key_shape {
     algorithm = upper(coalesce(each.value.algorithm, "AES"))
     length    = coalesce(each.value.length, 32)
     curve_id  = each.value.curve_id
   }
+  is_auto_rotation_enabled = (coalesce(var.vaults_configuration.vaults[coalesce(each.value.vault_key,each.value.vault_id,"__VOID__")].type,"__VOID__") == "VIRTUAL_PRIVATE" || data.oci_kms_vault.these[coalesce(each.value.vault_key,each.value.vault_id,"__VOID__")].vault_type == "VIRTUAL_PRIVATE") && each.value.is_auto_rotation_enabled != null ? each.value.is_auto_rotation_enabled : false
   dynamic "auto_key_rotation_details" {
-    for_each = each.value.is_auto_rotation_enabled == true && var.vaults_configuration.vaults[each.value.vault_key].type == "VIRTUAL_PRIVATE" ? [1] : []
+    for_each = each.value.is_auto_rotation_enabled == true && coalesce(var.vaults_configuration.vaults[coalesce(each.value.vault_key,each.value.vault_id,"__VOID__")].type,"__VOID__") == "VIRTUAL_PRIVATE" || data.oci_kms_vault.these[coalesce(each.value.vault_key,each.value.vault_id,"__VOID__")].vault_type == "VIRTUAL_PRIVATE" ? [1] : []
     content {
       last_rotation_message     = each.value.last_rotation_message
       last_rotation_status      = each.value.last_rotation_status
@@ -81,7 +89,6 @@ resource "oci_kms_key" "these" {
       time_of_schedule_start    = each.value.time_of_schedule_start
     }
   }
-  is_auto_rotation_enabled = var.vaults_configuration.vaults[each.value.vault_key].type == "VIRTUAL_PRIVATE" && each.value.is_auto_rotation_enabled != null ? each.value.is_auto_rotation_enabled : false
   defined_tags             = each.value.defined_tags != null ? each.value.defined_tags : var.vaults_configuration.default_defined_tags
   freeform_tags            = merge(local.cislz_module_tag, each.value.freeform_tags != null ? each.value.freeform_tags : var.vaults_configuration.default_freeform_tags)
 }
@@ -119,13 +126,13 @@ resource "oci_identity_policy" "managed_keys" {
 #-- Used for retrieving the compartment name to use in policy statements
 data "oci_identity_compartment" "existing_keys" {
   provider = oci.home
-  for_each = var.vaults_configuration != null ? (var.vaults_configuration.existing_keys_grants != null ? var.vaults_configuration.existing_keys_grants : {}) : {}
+  for_each = try(var.vaults_configuration.existing_key_grants,{})
   id       = each.value.compartment_ocid
 }
 
 resource "oci_identity_policy" "existing_keys" {
   provider       = oci.home
-  for_each       = var.vaults_configuration != null ? (var.vaults_configuration.existing_keys_grants != null ? var.vaults_configuration.existing_keys_grants : {}) : {}
+  for_each       = try(var.vaults_configuration.existing_key_grants,{})
   name           = "${lower(each.key)}-policy"
   description    = "CIS Landing Zone policy allowing access to keys in the Vault service."
   compartment_id = length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id
@@ -137,7 +144,7 @@ resource "oci_identity_policy" "existing_keys" {
 }
 
 resource "oci_kms_vault_replication" "these" {
-  for_each = { for k, v in var.vaults_configuration != null ? var.vaults_configuration.vaults : {} : k => v
+  for_each = { for k, v in try(var.vaults_configuration.vaults,{}) : k => v
     if v.replica_region != null
   }
   vault_id       = oci_kms_vault.these[each.key].id
