@@ -65,7 +65,7 @@ variable "vaults_dependency" {
   type = map(object({
     id                  = string # the vault OCID
     vault_type          = string # vault type, either "DEFAULT" or "VIRTUAL_PRIVATE"
-    vault_management_endpoint = optional(string) # the vault management endpoint URL.
+    management_endpoint = optional(string) # the vault management endpoint URL.
   }))
   default = null
 }
