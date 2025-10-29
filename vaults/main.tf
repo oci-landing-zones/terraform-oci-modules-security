@@ -32,8 +32,7 @@ locals {
   # If it's created in this stack, look up the id oci_kms_vault.these[each.value.key].id
   # If you provide an OCID, perform the data lookup
 
-  vault_ids          = { for k, v in try(var.vaults_configuration.keys, {}) : k => { "id" : v.vault_id } if(v.vault_id != null) }
-  provisioned_vaults = merge(oci_kms_vault.these, var.vaults_dependency, data.oci_kms_vault.these)
+  vault_ids = { for k, v in try(var.vaults_configuration.keys, {}) : k => { "id" : v.vault_id } if (v.vault_id != null) }
 }
 
 data "oci_kms_vault" "these" {
