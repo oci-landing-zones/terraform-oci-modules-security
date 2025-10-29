@@ -27,7 +27,7 @@ locals {
 
   algorithms = ["AES", "RSA", "ECDSA"]
 
-  vault_ids = { for k, v in try(var.vaults_configuration.keys, {}) : k => { "id" : v.vault_id } if (v.vault_id != null) }
+  vault_ids = { for k, v in try(var.vaults_configuration.keys, {}) : k => { "id" : v.vault_id } if(v.vault_id != null) }
 }
 
 data "oci_kms_vault" "these" {
