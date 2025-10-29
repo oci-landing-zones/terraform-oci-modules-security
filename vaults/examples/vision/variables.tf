@@ -14,7 +14,3 @@ variable "vaults_configuration" {
   type        = any
   default     = null
 }
-
-variable "vaults_dependency" {
-  type = any
-}

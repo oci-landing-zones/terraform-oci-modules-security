@@ -27,11 +27,6 @@ locals {
 
   algorithms = ["AES", "RSA", "ECDSA"]
 
-  # If you provide a key, check if the vault is an external dependency or if it was created within this stack
-  # If it's an external dependency, look up the id var.vaults_dependency[each.value.key].id
-  # If it's created in this stack, look up the id oci_kms_vault.these[each.value.key].id
-  # If you provide an OCID, perform the data lookup
-
   vault_ids = { for k, v in try(var.vaults_configuration.keys, {}) : k => { "id" : v.vault_id } if (v.vault_id != null) }
 }
 
@@ -83,9 +78,7 @@ resource "oci_kms_key" "these" {
     curve_id  = each.value.curve_id
   }
   is_auto_rotation_enabled = each.value.is_auto_rotation_enabled && try(var.vaults_configuration.vaults[each.value.vault_key].type, var.vaults_dependency[each.value.vault_key].vault_type, data.oci_kms_vault.these[each.key].vault_type, "__VOID__") == "VIRTUAL_PRIVATE"
-  # is_auto_rotation_enabled = (coalesce(var.vaults_configuration.vaults[coalesce(each.value.vault_key, "__VOID__")].type, "__VOID__") == "VIRTUAL_PRIVATE" || coalesce(var.vaults_dependency[coalesce(each.value.vault_key, "__VOID__")].vault_type, "__VOID__") == "VIRTUAL_PRIVATE" || coalesce(data.oci_kms_vault.these[coalesce(each.value.vault_key, "__VOID__")].vault_type, "__VOID__") == "VIRTUAL_PRIVATE" ) && each.value.is_auto_rotation_enabled != null ? each.value.is_auto_rotation_enabled : false
   dynamic "auto_key_rotation_details" {
-    # for_each = each.value.is_auto_rotation_enabled && (coalesce(var.vaults_configuration.vaults[coalesce(each.value.vault_key, "__VOID__")].type, "__VOID__") == "VIRTUAL_PRIVATE" || coalesce(var.vaults_dependency[coalesce(each.value.vault_key, "__VOID__")].vault_type, "__VOID__") == "VIRTUAL_PRIVATE" || coalesce(data.oci_kms_vault.these[coalesce(each.value.vault_key, "__VOID__")].vault_type, "__VOID__") == "VIRTUAL_PRIVATE" ) ? [1] : []
     for_each = each.value.is_auto_rotation_enabled && try(var.vaults_configuration.vaults[each.value.vault_key].type, var.vaults_dependency[each.value.vault_key].vault_type, data.oci_kms_vault.these[each.key].vault_type, "__VOID__") == "VIRTUAL_PRIVATE" ? [1] : []
     content {
       last_rotation_message     = each.value.last_rotation_message
