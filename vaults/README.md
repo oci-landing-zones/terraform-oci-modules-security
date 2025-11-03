@@ -84,8 +84,9 @@ Within *vaults_configuration*, use the *keys* attribute to define the keys manag
 The *keys* attribute supports the following attributes:
 - **name**: the key name.
 - **compartment_id**: the compartment where the key is created. *default_compartment_id* is used if undefined. This attribute is overloaded. It can be assigned either a literal OCID or a reference (a key) to an OCID. See [External Dependencies](#ext_dep) for details.
+- **vault_id**: the OCID of the vault where this key belongs to. If provided, this attribute takes precedence over *vault_key* and *vault_management_endpoint*. **Use this attribute to add this key to a Vault that is managed elsewhere**.
 - **vault_key**: the index name within the vaults attribute where this key belongs to.
-- **vault_management_endpoint**: the vault management endpoint where this key belongs to. If provided, this value takes precedence over *vault_key*. **Use this attribute to add this key to a Vault that is managed elsewhere**. This attribute is overloaded. It can be assigned either a literal endpoint URL or a reference (a key) to an endpoint URL. See [External Dependencies](#ext_dep) for details.
+- **vault_management_endpoint**: the vault management endpoint where this key belongs to. If provided, this attribute takes precedence over *vault_key*. **Use this attribute to add this key to a Vault that is managed elsewhere**. This attribute is overloaded. It can be assigned either a literal endpoint URL or a reference (a key) to a vault dependency containing the endpoint URL. See [External Dependencies](#ext_dep) for details.
 - **algorithm**: the key algorithm. Valid values: "AES", "RSA", "ECDSA". Default: "AES".
 - **length**: key length in bytes. "AES" lengths: 16, 24, 32. "RSA" lengths: 256, 384, 512. "ECDSA" lengths: 32, 48, 66. Default: 32.
 - **curve_id**: curve id for "ECDSA" keys.
@@ -187,6 +188,7 @@ compartments_dependency = {
 
 vaults_dependency = {
   "SHARED-VIRTUAL-PRIVATE-VAULT" : {
+    "id" : "ocid1...."
     "management_endpoint" : "https://dvs...lw...fe-management.kms.us-ashburn-1.oraclecloud.com"
   }
 }
@@ -203,4 +205,6 @@ The external dependency approach helps with the creation of loosely coupled Terr
 - [Vaults in Terraform OCI Provider](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/kms_vault)
 
 ## <a name="issues">Known Issues</a>
-None.
+**1. Auto Key Rotation for Virtual Private Vaults in OC3 Does Not Work**
+
+    Currently, Auto Key Rotation doesn't work in OC3 due to an issue with the Vault Service Data Lookup from the Terraform API. We're currently monitoring the issue for any updates.

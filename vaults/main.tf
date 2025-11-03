@@ -70,7 +70,7 @@ resource "oci_kms_key" "these" {
   for_each            = coalesce(var.vaults_configuration.keys, {})
   compartment_id      = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id)
   display_name        = each.value.name
-  management_endpoint = each.value.vault_management_endpoint != null ? length(regexall("^https://.*$", each.value.vault_management_endpoint)) > 0 ? each.value.vault_management_endpoint : var.vaults_dependency[each.value.vault_management_endpoint].management_endpoint : oci_kms_vault.these[each.value.vault_key].management_endpoint
+  management_endpoint = each.value.vault_management_endpoint != null ? length(regexall("^https://.*$", each.value.vault_management_endpoint)) > 0 ? each.value.vault_management_endpoint : var.vaults_dependency[each.value.vault_management_endpoint].management_endpoint : each.value.vault_id != null ? data.oci_kms_vault.these[each.value.key].management_endpoint : oci_kms_vault.these[each.value.vault_key].management_endpoint
   protection_mode     = upper(coalesce(each.value.protection_mode, "HSM"))
   key_shape {
     algorithm = upper(coalesce(each.value.algorithm, "AES"))

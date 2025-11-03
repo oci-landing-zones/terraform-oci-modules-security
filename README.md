@@ -49,6 +49,4 @@ Released under the Universal Permissive License v1.0 as shown at
 <https://oss.oracle.com/licenses/upl/>.
 
 ## Known Issues
-**1. Auto Key Rotation for Virtual Private Vaults in OC3 Does Not Work**
-
-    Currently, Auto Key Rotation doesn't work in OC3 due to an issue with the Vault Service Data Lookup from the Terraform API. We're currently monitoring the issue for any updates.
+None.
