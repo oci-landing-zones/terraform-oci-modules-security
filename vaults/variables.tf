@@ -63,8 +63,7 @@ variable "compartments_dependency" {
 variable "vaults_dependency" {
   description = "A map of objects containing the externally managed vaults this module may depend on. All map objects must have the same type and must contain at least a vault OCID."
   type = map(object({
-    id                  = string           # the vault OCID
-    vault_type          = string           # vault type, either "DEFAULT" or "VIRTUAL_PRIVATE"
+    vault_id            = string           # the vault OCID
     management_endpoint = optional(string) # the vault management endpoint URL.
   }))
   default = null

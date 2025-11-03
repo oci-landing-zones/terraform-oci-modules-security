@@ -26,8 +26,9 @@ locals {
   ])
 
   algorithms = ["AES", "RSA", "ECDSA"]
+  vault_inputs = merge(coalesce(var.vaults_configuration.keys, {}), try(var.vaults_dependency, {}))
+  vault_ids = { for k, v in local.vault_inputs : k => { "id" : v.vault_id } if v.vault_id != null }
 
-  vault_ids = { for k, v in try(var.vaults_configuration.keys, {}) : k => { "id" : v.vault_id } if(v.vault_id != null) }
 }
 
 data "oci_kms_vault" "these" {
@@ -70,16 +71,16 @@ resource "oci_kms_key" "these" {
   for_each            = coalesce(var.vaults_configuration.keys, {})
   compartment_id      = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id)
   display_name        = each.value.name
-  management_endpoint = each.value.vault_management_endpoint != null ? length(regexall("^https://.*$", each.value.vault_management_endpoint)) > 0 ? each.value.vault_management_endpoint : var.vaults_dependency[each.value.vault_management_endpoint].management_endpoint : each.value.vault_id != null ? data.oci_kms_vault.these[each.value.key].management_endpoint : oci_kms_vault.these[each.value.vault_key].management_endpoint
+  management_endpoint = each.value.vault_management_endpoint != null ? length(regexall("^https://.*$", each.value.vault_management_endpoint)) > 0 ? each.value.vault_management_endpoint : var.vaults_dependency[each.value.vault_management_endpoint].management_endpoint : ( each.value.vault_id != null || each.value.vault_key != null && var.vaults_dependency != null ) ? data.oci_kms_vault.these[coalesce(each.value.vault_key, each.key, "__VOID__")].management_endpoint : oci_kms_vault.these[each.value.vault_key].management_endpoint
   protection_mode     = upper(coalesce(each.value.protection_mode, "HSM"))
   key_shape {
     algorithm = upper(coalesce(each.value.algorithm, "AES"))
     length    = coalesce(each.value.length, 32)
     curve_id  = each.value.curve_id
   }
-  is_auto_rotation_enabled = each.value.is_auto_rotation_enabled && try(var.vaults_configuration.vaults[each.value.vault_key].type, var.vaults_dependency[each.value.vault_key].vault_type, data.oci_kms_vault.these[each.key].vault_type, "__VOID__") == "VIRTUAL_PRIVATE"
+  is_auto_rotation_enabled = each.value.is_auto_rotation_enabled && try(var.vaults_configuration.vaults[each.value.vault_key].type, data.oci_kms_vault.these[coalesce(each.value.vault_key, each.key, "__VOID__")].vault_type, "__VOID__") == "VIRTUAL_PRIVATE"
   dynamic "auto_key_rotation_details" {
-    for_each = each.value.is_auto_rotation_enabled && try(var.vaults_configuration.vaults[each.value.vault_key].type, var.vaults_dependency[each.value.vault_key].vault_type, data.oci_kms_vault.these[each.key].vault_type, "__VOID__") == "VIRTUAL_PRIVATE" ? [1] : []
+    for_each = each.value.is_auto_rotation_enabled && try(var.vaults_configuration.vaults[each.value.vault_key].type, data.oci_kms_vault.these[coalesce(each.value.vault_key, each.key, "__VOID__")].vault_type, "__VOID__") == "VIRTUAL_PRIVATE" ? [1] : []
     content {
       last_rotation_message     = each.value.last_rotation_message
       last_rotation_status      = each.value.last_rotation_status
