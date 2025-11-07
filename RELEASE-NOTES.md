@@ -1,3 +1,8 @@
+# November 7, 2025 Release Notes - 0.2.3
+
+## Updates
+1. Key creation updated to support usage of externally managed vaults.
+
 # August 20, 2025 Release Notes - 0.2.2
 
 ## Updates
