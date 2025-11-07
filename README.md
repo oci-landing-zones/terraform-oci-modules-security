@@ -2,6 +2,8 @@
 
 ![Landing Zone logo](./landing_zone_300.png)
 
+Welcome to the [OCI Landing Zones (OLZ) Community](https://github.com/oci-landing-zones)! OCI Landing Zones simplify onboarding and running on OCI by providing design guidance, best practices, and pre-configured Terraform deployment templates for various architectures and use cases. These enable customers to easily provision a secure tenancy foundation in the cloud along with all required services, and reliably scale as workloads expand.
+
 This repository contains Terraform OCI (Oracle Cloud Infrastructure) modules for security services that help customers align their OCI implementations with the CIS (Center for Internet Security) OCI Foundations Benchmark recommendations.
 
 The following modules are available:
