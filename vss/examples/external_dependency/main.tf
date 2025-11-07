@@ -14,7 +14,7 @@ data "oci_objectstorage_object" "compartments" {
 }
 
 module "vision_scanning" {
-  source                  = "github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/vss"
+  source                  = "../.."
   scanning_configuration  = var.scanning_configuration
   compartments_dependency = var.oci_compartments_dependency != null ? jsondecode(data.oci_objectstorage_object.compartments[0].content) : null
 }
