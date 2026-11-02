@@ -42,6 +42,7 @@ The OCI Object Storage object with vaults dependencies (*oci_vaults_dependency*)
 ```
 {
   "SHARED-VIRTUAL-PRIVATE-VAULT" : {
+    "vault_id" : "ocid1....",
     "management_endpoint" : "https://dvs...lw...fe-management.kms.us-ashburn-1.oraclecloud.com"
   }
 }
