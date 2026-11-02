@@ -1,7 +1,7 @@
 # Unreleased - 0.2.4
 
 ## Fixes
-1. Vault keys now resolve each `vault_key` against the external dependencies before selecting a same-stack vault. Empty dependency maps and configurations containing both external and same-stack vaults no longer send local vault references to an absent external lookup ([Orchestrator #66](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/66)). Inputs, outputs and managed resource addresses are unchanged.
+1. Fix `Invalid index` for same-stack vault references when `vaults_dependency` is empty or contains other vaults ([Orchestrator #66](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/66)).
 
 # November 7, 2025 Release Notes - 0.2.3
 
