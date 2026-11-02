@@ -1,3 +1,8 @@
+# Unreleased - 0.2.4
+
+## Fixes
+1. Fix planning when an external vault OCID is known only after apply ([#22](https://github.com/oci-landing-zones/terraform-oci-modules-security/issues/22)).
+
 # November 7, 2025 Release Notes - 0.2.3
 
 ## Updates
