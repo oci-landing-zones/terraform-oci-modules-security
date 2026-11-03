@@ -2,9 +2,10 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 locals {
+  configured_keys = coalesce(var.vaults_configuration.keys, {})
 
   keys_policies = flatten([
-    for key_key, key_value in try(var.vaults_configuration.keys, {}) : {
+    for key_key, key_value in local.configured_keys : {
       key            = key_key
       compartment_id = key_value.compartment_id != null ? (length(regexall("^ocid1.*$", key_value.compartment_id)) > 0 ? key_value.compartment_id : var.compartments_dependency[key_value.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id)
       name           = "${key_value.name}-policy"
@@ -17,7 +18,7 @@ locals {
   ])
 
   keys_versions = flatten([
-    for key_key, key_value in try(var.vaults_configuration.keys, {}) : [
+    for key_key, key_value in local.configured_keys : [
       for version in(key_value.versions != null ? key_value.versions : []) : {
         key_key     = key_key
         version_key = "${key_key}.${version}"
@@ -25,9 +26,12 @@ locals {
     ]
   ])
 
-  algorithms   = ["AES", "RSA", "ECDSA"]
-  vault_inputs = merge(coalesce(var.vaults_configuration.keys, {}), try(var.vaults_dependency, {}))
-  vault_ids    = { for k, v in local.vault_inputs : k => { "id" : v.vault_id } if v.vault_id != null }
+  algorithms = ["AES", "RSA", "ECDSA"]
+  vault_inputs = merge(
+    { for k, v in local.configured_keys : k => { vault_id = v.vault_id } if(v.vault_key == null && v.vault_management_endpoint == null ? true : v.vault_id != null) },
+    coalesce(var.vaults_dependency, {})
+  )
+  vault_ids = { for k, v in local.vault_inputs : k => { "id" : v.vault_id } }
 
 }
 
@@ -39,7 +43,7 @@ data "oci_kms_vault" "these" {
 #-- Used for retrieving the compartment name to use in policy statements
 data "oci_identity_compartment" "managed_keys" {
   provider = oci.home
-  for_each = { for k, v in try(var.vaults_configuration.keys, {}) : k => { compartment_id = v.compartment_id != null ? (length(regexall("^ocid1.*$", v.compartment_id)) > 0 ? v.compartment_id : var.compartments_dependency[v.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id) } }
+  for_each = { for k, v in local.configured_keys : k => { compartment_id = v.compartment_id != null ? (length(regexall("^ocid1.*$", v.compartment_id)) > 0 ? v.compartment_id : var.compartments_dependency[v.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id) } }
   id       = each.value.compartment_id
 }
 
@@ -68,7 +72,7 @@ resource "oci_kms_key" "these" {
       error_message = "VALIDATION FAILURE : either vault_key, vault_management_endpoint or vault_id must be provided. Otherwise it is not possible to know which vault the key belongs to."
     }
   }
-  for_each            = coalesce(var.vaults_configuration.keys, {})
+  for_each            = local.configured_keys
   compartment_id      = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : var.compartments_dependency[each.value.compartment_id].id) : (length(regexall("^ocid1.*$", var.vaults_configuration.default_compartment_id)) > 0 ? var.vaults_configuration.default_compartment_id : var.compartments_dependency[var.vaults_configuration.default_compartment_id].id)
   display_name        = each.value.name
   management_endpoint = each.value.vault_management_endpoint != null ? length(regexall("^https://.*$", each.value.vault_management_endpoint)) > 0 ? each.value.vault_management_endpoint : var.vaults_dependency[each.value.vault_management_endpoint].management_endpoint : (each.value.vault_id != null || each.value.vault_key != null && var.vaults_dependency != null) ? data.oci_kms_vault.these[coalesce(each.value.vault_key, each.key, "__VOID__")].management_endpoint : oci_kms_vault.these[each.value.vault_key].management_endpoint
