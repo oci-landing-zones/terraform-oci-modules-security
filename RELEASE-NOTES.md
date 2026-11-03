@@ -1,4 +1,4 @@
-# Unreleased - 0.2.4
+# November 3, 2026 Release Notes - 0.2.4
 
 ## Fixes
 1. Fix `Invalid index` for same-stack vault references when `vaults_dependency` is empty or contains other vaults ([Orchestrator #66](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/66)).
